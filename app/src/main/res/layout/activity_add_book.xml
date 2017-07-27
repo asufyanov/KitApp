@@ -7,7 +7,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:clickable="true">
+    android:clickable="true"
+    android:baselineAligned="false">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,6 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorBackground"
+            android:paddingRight="15dp"
+
+
 
             />
         <!-- app:layout_scrollFlags="scroll|enterAlways|snap" -->
@@ -29,9 +33,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:id="@+id/activity_add_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,7 +41,8 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.kitapp.book.Activities.AddBookActivity">
+        tools:context="com.kitapp.book.Activities.AddBookActivity"
+        android:layout_weight="1">
 
         <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -47,8 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:visibility="visible"
-            >
+            android:visibility="visible">
 
 
             <LinearLayout
@@ -62,18 +64,29 @@
 
                     android:id="@+id/img_camera"
                     android:layout_width="210dp"
-                    android:layout_height="280dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-
-
                     android:adjustViewBounds="true"
-                    android:background="@color/colorPrimary" />
+
+
+                    android:background="@color/colorPrimary"
+                    tools:layout_height="280dp" />
+
+                <TextView
+                    android:id="@+id/tv_imageHint"
+                    android:text="@string/press_to_edit"
+                    android:layout_width="match_parent"
+                    android:textAlignment="center"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:textStyle="bold"/>
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/inputLayoutName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="50dp"
 
                     app:errorEnabled="true">
 
@@ -167,16 +180,15 @@
                     android:text="Выбрать Жанр" />
 
                 <Button
-                    android:layout_marginTop="10dp"
                     android:id="@+id/btnTakePicture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:text="@string/save"
-                    android:theme="@style/MyButton"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/button_border"
-                    />
+                    android:text="@string/save"
+                    android:theme="@style/MyButton" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 

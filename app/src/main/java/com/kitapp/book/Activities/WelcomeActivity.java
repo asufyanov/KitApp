@@ -52,6 +52,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
         setReferences();
 
+        if (MyDataHolder.getInstance().genreTitles==null) loadGenres();
+        else checkAuthorization();
 
 
 
@@ -108,8 +110,8 @@ public class WelcomeActivity extends AppCompatActivity {
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 registerForm();
+
 
 
             }
@@ -170,7 +172,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 Log.d("AzizWelcomeActivity", "isValidLogin "+fault.getMessage());
 
 
-                Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG).show();
+                if (fault.getCode()!="3064") Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG).show();
                 showProgress(false);
             }
 
@@ -394,10 +396,11 @@ public class WelcomeActivity extends AppCompatActivity {
         }, true);
     }
 
+
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (MyDataHolder.getInstance().genreTitles==null) loadGenres();
-        //else checkAuthorization();
+    protected void onStart() {
+        super.onStart();
+
     }
 }

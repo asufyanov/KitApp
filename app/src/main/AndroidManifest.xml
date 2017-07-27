@@ -60,7 +60,7 @@
         <activity
             android:name=".Activities.AddBookActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
+            android:windowSoftInputMode="stateVisible|adjustResize|stateHidden" />
         <activity android:name="com.android.camera.CropImage" />
         <activity
             android:name=".Activities.NameSurname"

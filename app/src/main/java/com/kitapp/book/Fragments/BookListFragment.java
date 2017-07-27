@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+import com.kitapp.book.Activities.AddBookActivity;
 import com.kitapp.book.Activities.BookListActivity;
 import com.kitapp.book.Activities.MainActivity;
 import com.kitapp.book.Adapters.RecyclerBookAdapter;
@@ -51,6 +53,9 @@ public class BookListFragment extends Fragment {
     public Boolean myBooks = false;
     public Genre searchGenre = null;
     public BackendlessUser searchOwner = null;
+
+    View emptyState;
+    Button btnAddBook;
 
     long lastSearchTime;
     private LinearLayoutManager mLayoutManager;
@@ -82,6 +87,8 @@ public class BookListFragment extends Fragment {
 
             }
         });
+        emptyState = v.findViewById(R.id.linearlay_empty_state);
+        btnAddBook = (Button) v.findViewById(R.id.btn_add_book);
 
         progressBar = (ProgressBar)v.findViewById(R.id.progressBar);
 
@@ -110,6 +117,14 @@ public class BookListFragment extends Fragment {
             }
         });
 
+        btnAddBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddBookActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         recyclerView.setAdapter(adapter);
     }
@@ -133,6 +148,7 @@ public class BookListFragment extends Fragment {
 
         long actualSearchTime = (Calendar.getInstance()).getTimeInMillis();
         if (actualSearchTime < lastSearchTime + 1000) return;
+        emptyState.setVisibility(View.GONE);
 
 
         lastSearchTime = (Calendar.getInstance()).getTimeInMillis();
@@ -187,7 +203,9 @@ public class BookListFragment extends Fragment {
 
                 if (bookBackendlessCollection.size() == 0 && books.size() == 0) {
 
-                    Toast.makeText(getActivity(), getString(R.string.no_books), Toast.LENGTH_SHORT).show();
+                    emptyState.setVisibility(View.VISIBLE);
+
+                    //Toast.makeText(getActivity(), getString(R.string.no_books), Toast.LENGTH_SHORT).show();
                 } else if (bookBackendlessCollection.size() == 0 && books.size() != 0) {
                     Toast.makeText(getActivity(), getString(R.string.no_books_left_else), Toast.LENGTH_SHORT).show();
                     adapter.setLoaded(false);

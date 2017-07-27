@@ -60,6 +60,8 @@ public class AddBookActivity extends AppCompatActivity {
     Toolbar toolbar;
     MenuItem saveMenuBtn;
 
+    TextView tv_imageHint;
+
     TextView genreTextView;
 
     Book editedBook = null;
@@ -106,6 +108,8 @@ public class AddBookActivity extends AppCompatActivity {
         loginForm = findViewById(R.id.login_form);
         btn = (Button) findViewById(R.id.btnTakePicture);
         genreTextView = (TextView) findViewById(R.id.genreTextView);
+
+        tv_imageHint = (TextView)findViewById(R.id.tv_imageHint);
 
         spinner = (Spinner) findViewById(R.id.spinner);
         spinnerGenreAdapter = new SpinnerGenreAdapter(this, genreList);
@@ -191,6 +195,12 @@ public class AddBookActivity extends AppCompatActivity {
                 */
             }
         });
+        tv_imageHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imgViewCamera.performClick();
+            }
+        });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,14 +208,9 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-        Glide
-                .with(this)
-                //.load(books.get(position).getImage())
-                .load(R.drawable.addbookplaceholder)
-                //.fitCenter()
-                //.placeholder(R.drawable.addbookplaceholder)
-                .crossFade()
-                .into(imgViewCamera);
+
+
+        imgViewCamera.setImageResource(R.drawable.addbookplaceholder);
     }
 
 
@@ -394,9 +399,10 @@ public class AddBookActivity extends AppCompatActivity {
         }
 
         if (sendFile == null && oldImageUrl == null) {
-            titleEditText.setError(getString(R.string.select_picture));
-            focusView = imgViewCamera;
+            //titleEditText.setError(getString(R.string.select_picture));
+            focusView = tv_imageHint;
             isValid = false;
+            Toast.makeText(this, getString(R.string.select_picture), Toast.LENGTH_SHORT).show();
         }
 
         if (TextUtils.isEmpty(authorEditText.getText().toString())) {

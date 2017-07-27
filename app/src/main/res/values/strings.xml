@@ -21,6 +21,8 @@
     <string name="enter_description">Введите описание</string>
     <string name="book_created_success">Книга успешна создана</string>
     <string name="book_created_fail">Не удалось сохранить книгу</string>
+    <string name="press_to_edit">Нажмите, чтобы изменить картинку</string>
+
 
     <!--    BOOK LIST ACT   !-->
     <string name="all_books">Все книги</string>
@@ -31,7 +33,7 @@
     <string name="genres">Жанры</string>
 
     <!--    BOOK LIST FRA   !-->
-    <string name="no_books">Книг нет</string>
+    <string name="no_books">Книг по данному запросу НЕТ</string>
     <string name="no_books_left_else">Больше книг нет</string>
     <string name="fail_to_load_books">Не удалось загрузить книги</string>
 

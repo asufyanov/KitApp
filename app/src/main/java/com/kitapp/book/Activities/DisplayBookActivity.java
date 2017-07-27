@@ -170,7 +170,7 @@ public class DisplayBookActivity extends AppCompatActivity {
 
         //ЗАБИВАЕМ ЖАНР
         String genre = "";
-        if (genre!=null) genre += book.getGenre().getTitle();
+        if (book.getGenre()!=null) genre += book.getGenre().getTitle();
         if (genre.length() == 0) genre = getString(R.string.not_entered);
         genreTextView.setText(getString(R.string.genre)+ ": " + genre);
 
