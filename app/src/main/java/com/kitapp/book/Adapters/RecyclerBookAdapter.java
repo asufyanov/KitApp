@@ -110,7 +110,13 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (holder instanceof BookViewHolder) {
             final BookViewHolder vh = (BookViewHolder) holder;
             vh.bookTitleTextView.setText(books.get(position).getTitle());
-            vh.bookPriceTextView.setText("" + books.get(position).getPrice()+" "+parentContext.getString(R.string.tenge).toLowerCase());
+            if (books.get(position).getPrice()==0){
+                vh.bookPriceTextView.setText(parentContext.getString(R.string.chocolate));
+
+            } else {
+                vh.bookPriceTextView.setText("" + books.get(position).getPrice()+" "+parentContext.getString(R.string.tenge).toLowerCase());
+
+            }
             //vh.bookPriceTextView.setText("" + books.get(position).getGenre().getTitle());
 
 
@@ -205,7 +211,6 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 parentContext.startActivity(intent);
 
             } else  {
-                Toast.makeText(v.getContext(), "position="+getAdapterPosition(), Toast.LENGTH_SHORT).show();
                 Book book = books.get(getAdapterPosition());
                 Intent intent = new Intent(v.getContext(), DisplayBookActivity.class);
 

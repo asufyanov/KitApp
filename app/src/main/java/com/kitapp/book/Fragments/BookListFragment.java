@@ -87,6 +87,7 @@ public class BookListFragment extends Fragment {
 
             }
         });
+        swipeContainer.setColorSchemeColors(getResources().getColor(R.color.accent));
         emptyState = v.findViewById(R.id.linearlay_empty_state);
         btnAddBook = (Button) v.findViewById(R.id.btn_add_book);
 
@@ -207,7 +208,7 @@ public class BookListFragment extends Fragment {
 
                     //Toast.makeText(getActivity(), getString(R.string.no_books), Toast.LENGTH_SHORT).show();
                 } else if (bookBackendlessCollection.size() == 0 && books.size() != 0) {
-                    Toast.makeText(getActivity(), getString(R.string.no_books_left_else), Toast.LENGTH_SHORT).show();
+                    if (getActivity()!=null) Toast.makeText(getActivity(), getString(R.string.no_books_left_else), Toast.LENGTH_SHORT).show();
                     adapter.setLoaded(false);
                 }
                 int size = books.size();

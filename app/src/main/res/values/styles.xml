@@ -7,6 +7,8 @@
         <item name="colorPrimaryDark">@color/bookTitleColor</item>
         <item name="colorAccent">@color/colorAccent</item>
 
+        <item name="actionMenuTextColor">@color/colorAccent</item>
+
 
 
     </style>
@@ -38,8 +40,8 @@
 
     <!--Input field style-->
     <style name="MyEditText" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/indigo</item>
-        <item name="colorControlActivated">@color/indigo</item>
+        <item name="colorControlNormal">@color/accent</item>
+        <item name="colorControlActivated">@color/accent</item>
 
         <item name="android:background">@null</item>
         <item name="android:textSize">@dimen/abc_text_size_subhead_material</item>

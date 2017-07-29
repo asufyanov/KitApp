@@ -1,5 +1,4 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -40,20 +39,22 @@
         android:visibility="visible" />
 
 
-
     <TextView
         android:id="@+id/bookTitleId"
-
         android:layout_width="wrap_content"
+
+
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/imageView"
+        android:layout_marginRight="45dp"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
+        android:ellipsize="end"
+        android:maxLines="3"
         android:text="Три Чашки Чая"
         android:textColor="@color/bookTitleColor"
         android:textSize="20sp"
-        android:textStyle="normal|bold"
-        android:layout_marginRight="45dp"/>
+        android:textStyle="normal|bold" />
 
     <TextView
         android:id="@+id/bookAuthorId"
@@ -74,28 +75,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/bookAuthorId"
+        android:layout_marginTop="20dp"
         android:layout_toEndOf="@id/imageView"
         android:layout_toRightOf="@id/imageView"
         android:text="bookPrice"
-        android:textSize="18sp"
-        android:layout_marginTop="20dp" />
+        android:textSize="18sp" />
 
     <ImageButton
 
-        android:clickable="true"
-        android:padding="5dp"
-
-        android:src="@mipmap/ic_edit_pencil"
-        android:layout_width="35dp"
-        android:layout_height="wrap_content"
         android:id="@+id/editBtn"
-        android:scaleType="centerInside"
+        android:layout_width="35dp"
+
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/deleteBtn"
+        android:adjustViewBounds="true"
         android:background="@null"
+        android:clickable="true"
 
         android:elevation="24dp"
-        android:adjustViewBounds="true"
-        android:layout_below="@+id/deleteBtn"
-        android:layout_alignParentEnd="true" />
+        android:padding="5dp"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_edit_pencil" />
 
 
 </RelativeLayout>

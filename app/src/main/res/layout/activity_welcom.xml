@@ -32,7 +32,7 @@
         android:layout_centerHorizontal="true"
 
         android:layout_below="@id/textView2"
-        android:text="Регистрация"
+        android:text="@string/authorization"
         android:textColor="@color/colorAccent"
         android:theme="@style/MyButton"
         android:background="@drawable/button_border"
@@ -47,7 +47,7 @@
         android:layout_centerHorizontal="true"
 
         android:layout_below="@id/textView2"
-        android:text="Перезапустить"
+        android:text="@string/restart"
         android:textColor="@color/colorAccent"
         android:theme="@style/MyButton"
         android:background="@drawable/button_border"

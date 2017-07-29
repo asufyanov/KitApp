@@ -1,11 +1,15 @@
 package com.kitapp.book.Activities;
 
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -50,7 +54,6 @@ public class AddBookActivity extends AppCompatActivity {
     protected ImageView imgViewCamera;
     protected int LOAD_IMAGE_CAMERA = 0, REQUEST_CROP_PICTURE = 1, LOAD_IMAGE_GALLARY = 2;
     File sendFile = null;
-    Spinner spinner;
     EditText titleEditText;
     EditText authorEditText;
     EditText priceEditText;
@@ -60,14 +63,10 @@ public class AddBookActivity extends AppCompatActivity {
     Toolbar toolbar;
     MenuItem saveMenuBtn;
 
-    TextView tv_imageHint;
-
     TextView genreTextView;
 
     Book editedBook = null;
     String oldImageUrl = null;
-    Button chooseGenres;
-    SpinnerGenreAdapter spinnerGenreAdapter = null;
     ArrayList<Genre> genreList;
     String selectedGenreId;
     boolean isActivityJustStarted = true;
@@ -106,46 +105,18 @@ public class AddBookActivity extends AppCompatActivity {
         descriptionEditText = (EditText) findViewById(R.id.editTextDescription);
         progressView = findViewById(R.id.progressBar);
         loginForm = findViewById(R.id.login_form);
-        btn = (Button) findViewById(R.id.btnTakePicture);
+        btn = (Button) findViewById(R.id.saveBtn);
         genreTextView = (TextView) findViewById(R.id.genreTextView);
-
-        tv_imageHint = (TextView)findViewById(R.id.tv_imageHint);
-
-        spinner = (Spinner) findViewById(R.id.spinner);
-        spinnerGenreAdapter = new SpinnerGenreAdapter(this, genreList);
-
-        chooseGenres = (Button) findViewById(R.id.chooseGenreBtn);
-
-        chooseGenres.setOnClickListener(new View.OnClickListener() {
+        genreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(getApplication(), SelectGenreActivity.class);
 
                 startActivityForResult(intent, SELECT_GENRE_REQUEST_CODE);
-                //spinner.performClick();
-
             }
         });
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (isActivityJustStarted) {
-                    isActivityJustStarted = false;
-                    return;
-                }
 
-                selectedGenreId = MyDataHolder.getInstance().genreTitles.get(position).getObjectId();
-                genreTextView.setText(MyDataHolder.getInstance().genreTitles.get(position).getTitle());
-                //Log.d("AddBook", "genre selected pos=" + position + " genreTitle=" + genreList.get(position).getTitle());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
 
         imgViewCamera.setOnClickListener(new View.OnClickListener() {
@@ -155,6 +126,7 @@ public class AddBookActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_PICK,
                         android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), LOAD_IMAGE_GALLARY);
+
 
                 /*
                 final CharSequence[] options = {"Take Photo", "Choose from Gallery"};
@@ -186,19 +158,14 @@ public class AddBookActivity extends AppCompatActivity {
                         } else if (options[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK,
                                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), LOAD_IMAGE_GALLARY);
+                            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), LOAD_IMAGE_GALLARY);
+
                         }
                     }
                 });
 
-                builder.show();
-                */
-            }
-        });
-        tv_imageHint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imgViewCamera.performClick();
+                builder.show();*/
+
             }
         });
         btn.setOnClickListener(new View.OnClickListener() {
@@ -208,9 +175,14 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-
-
-        imgViewCamera.setImageResource(R.drawable.addbookplaceholder);
+        Glide
+                .with(this)
+                //.load(books.get(position).getImage())
+                .load(R.drawable.addbookplaceholder)
+                //.fitCenter()
+                //.placeholder(R.drawable.addbookplaceholder)
+                .crossFade()
+                .into(imgViewCamera);
     }
 
 
@@ -220,8 +192,10 @@ public class AddBookActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOAD_IMAGE_CAMERA && resultCode == RESULT_OK) {
 
+
+
             Uri croppedImage = Uri.fromFile(croppedImageFile);
-            CropImageIntentBuilder cropImage = new CropImageIntentBuilder(3, 4, 900, 1200, croppedImage);
+            CropImageIntentBuilder cropImage = new CropImageIntentBuilder(3, 4, 600, 800, croppedImage);
             cropImage.setOutlineColor(0xFF03A9F4);
 
             cropImage.setSourceImage(picUri);
@@ -273,7 +247,7 @@ public class AddBookActivity extends AppCompatActivity {
             if (data!=null){
                 String genreAsString =  data.getExtras().getString("genre");
                 Genre genre = new Gson().fromJson(genreAsString, Genre.class);
-                genreTextView.setText(genre.getTitle());
+                genreTextView.setText(genre.getTitle()+" >");
                 selectedGenreId = genre.getObjectId();
             }
         }
@@ -399,10 +373,9 @@ public class AddBookActivity extends AppCompatActivity {
         }
 
         if (sendFile == null && oldImageUrl == null) {
-            //titleEditText.setError(getString(R.string.select_picture));
-            focusView = tv_imageHint;
+            titleEditText.setError(getString(R.string.select_picture));
+            focusView = imgViewCamera;
             isValid = false;
-            Toast.makeText(this, getString(R.string.select_picture), Toast.LENGTH_SHORT).show();
         }
 
         if (TextUtils.isEmpty(authorEditText.getText().toString())) {
@@ -481,12 +454,6 @@ public class AddBookActivity extends AppCompatActivity {
         loginForm.setVisibility(View.VISIBLE);
 
         genreList = MyDataHolder.getInstance().genreTitles;
-        spinnerGenreAdapter = new SpinnerGenreAdapter(getApplicationContext(), genreList);
-        spinner.setAdapter(spinnerGenreAdapter);
-
-
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setPageSize(70);
 
 /*
         Backendless.Data.of(Genre.class).find(queryBuilder, new AsyncCallback<List<Genre>>() {
