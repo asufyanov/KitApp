@@ -91,7 +91,7 @@ public class MyNavigationDrawer {
                     .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                         @Override
                         public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                            Toast.makeText(activity, "pos="+position, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(activity, "pos="+position, Toast.LENGTH_SHORT).show();
 
                             if (position==1){
                                 if (activity instanceof MainActivity){

@@ -5,8 +5,8 @@
 
         android:id="@+id/likeMenuItem"
         android:title="LIKE"
-        android:icon="@mipmap/heart_empty"
-        app:showAsAction="always"
+        android:icon="@drawable/heart_empty"
+        app:showAsAction="ifRoom"
         >
 
     </item>

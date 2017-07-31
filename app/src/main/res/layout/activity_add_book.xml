@@ -175,7 +175,7 @@
                     android:id="@+id/genreTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Жанр не выбран >"
+                    android:text="@string/select_genre"
                     android:textSize="20sp"
                     android:textColor="@color/accent"
                     android:paddingLeft="5dp"

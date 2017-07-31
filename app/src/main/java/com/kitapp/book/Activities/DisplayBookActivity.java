@@ -2,6 +2,7 @@ package com.kitapp.book.Activities;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,6 +55,8 @@ public class DisplayBookActivity extends AppCompatActivity {
     Toolbar toolbar;
     String phone;
 
+    ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +67,18 @@ public class DisplayBookActivity extends AppCompatActivity {
     }
     private void setReferences() {
 
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        progressBar = new ProgressBar(this);
+        int padding_in_dp = 7;  // 7 dps
+        final float scale = getResources().getDisplayMetrics().density;
+        int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
+        progressBar.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
 
 
 
@@ -191,7 +202,7 @@ public class DisplayBookActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.displaybook_menu, menu);
         likeBtn = menu.findItem(R.id.likeMenuItem);
-        likeBtn.setActionView(new ProgressBar(this));
+        likeBtn.setActionView(progressBar);
         likeBtn.setEnabled(false);
 
         String curUserObjectId = Backendless.UserService.CurrentUser().getObjectId();
@@ -207,10 +218,10 @@ public class DisplayBookActivity extends AppCompatActivity {
                 likeBtn.setEnabled(true);
                 likeBtn.setActionView(null);
                 if (response.size()!=0){
-                    likeBtn.setIcon(getResources().getDrawable(R.mipmap.heart_filled));
+                    likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_filled));
                     isLiked = true;
                 } else {
-                    likeBtn.setIcon(getResources().getDrawable(R.mipmap.heart_empty));
+                    likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_empty));
                     isLiked = false;
 
                 }
@@ -237,7 +248,7 @@ public class DisplayBookActivity extends AppCompatActivity {
 
     private void like(Book book) {
         likeBtn.setEnabled(false);
-        likeBtn.setActionView(new ProgressBar(this));
+        likeBtn.setActionView(progressBar);
 
         ArrayList<Book> listRelation = new ArrayList<>();
         listRelation.add(book);
@@ -249,14 +260,14 @@ public class DisplayBookActivity extends AppCompatActivity {
                 isLiked = true;
                 likeBtn.setEnabled(true);
                 likeBtn.setActionView(null);
-                likeBtn.setIcon(getResources().getDrawable(R.mipmap.heart_filled));
+                likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_filled));
             }
             @Override
             public void handleFault(BackendlessFault fault) {
                 isLiked = false;
                 likeBtn.setEnabled(true);
                 likeBtn.setActionView(null);
-                likeBtn.setIcon(getResources().getDrawable(R.mipmap.heart_empty));
+                likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_empty));
 
             }
         });
@@ -266,7 +277,7 @@ public class DisplayBookActivity extends AppCompatActivity {
 
     private void unlike (Book book) {
         likeBtn.setEnabled(false);
-        likeBtn.setActionView(new ProgressBar(this));
+        likeBtn.setActionView(progressBar);
 
         ArrayList<Book> listRelation = new ArrayList<>();
         listRelation.add(book);
@@ -278,14 +289,14 @@ public class DisplayBookActivity extends AppCompatActivity {
                 isLiked = false;
                 likeBtn.setEnabled(true);
                 likeBtn.setActionView(null);
-                likeBtn.setIcon(getResources().getDrawable(R.mipmap.heart_empty));
+                likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_empty));
             }
             @Override
             public void handleFault(BackendlessFault fault) {
                 isLiked = true;
                 likeBtn.setEnabled(true);
                 likeBtn.setActionView(null);
-                likeBtn.setIcon(getResources().getDrawable(R.mipmap.heart_filled));
+                likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_filled));
 
             }
         });

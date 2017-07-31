@@ -3,6 +3,7 @@ package com.kitapp.book.Activities;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -89,6 +90,8 @@ public class AddBookActivity extends AppCompatActivity {
 
 
     public void setReference() {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         setContentView(R.layout.activity_add_book);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -1,6 +1,7 @@
 package com.kitapp.book.Activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -102,6 +103,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void setReferences() {
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
         registerBtn = (Button) findViewById(R.id.button);
@@ -241,11 +244,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
             // Surface the result to your user in an appropriate way.
 
-            Toast.makeText(
-                    this,
-                    toastMessage,
-                    Toast.LENGTH_LONG)
-                    .show();
+            //Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
         } else if (requestCode == REQUEST_NAME_SURNAME) {
             if (resultCode == RESULT_OK) {
                 String name = data.getExtras().getString("name");
@@ -323,7 +322,7 @@ public class WelcomeActivity extends AppCompatActivity {
         Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser response) {
-                Toast.makeText(getApplicationContext(), "NEW USER REGGED", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "NEW USER REGGED", Toast.LENGTH_SHORT).show();
                 Backendless.UserService.setCurrentUser(response);
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -351,7 +350,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 Backendless.UserService.setCurrentUser(response);
 
 
-                Toast.makeText(getApplicationContext(), "LOGINED SUCCESS", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "LOGINED SUCCESS", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
@@ -376,7 +375,7 @@ public class WelcomeActivity extends AppCompatActivity {
         Backendless.UserService.login(phone, password, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser response) {
-                Toast.makeText(getApplicationContext(), "CUR USER LOGGINED", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "CUR USER LOGGINED", Toast.LENGTH_SHORT).show();
                 //Backendless.UserService.setCurrentUser(response);
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
