@@ -523,7 +523,7 @@ public class AddBookActivity extends AppCompatActivity {
                 selectedGenreId = editedBook.getGenreId();
             }
             if (editedBook.getCity() != null) {
-                genreTextView.setText(editedBook.getCity().getTitle());
+                cityTextView.setText(editedBook.getCity().getTitle());
                 selectedCityId = editedBook.getCityId();
             }
 

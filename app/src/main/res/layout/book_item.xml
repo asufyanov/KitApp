@@ -79,10 +79,26 @@
         android:layout_height="wrap_content"
 
 
-        android:text="bookPrice"
+        android:text="100000"
         android:textSize="20sp"
         android:layout_alignBottom="@+id/imageView"
         android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/cityTextView"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/imageView"
+
+        android:paddingStart="16dp"
+        android:layout_marginRight="65dp"
+
+        android:text="Усть-Каменогорск"
+        android:textSize="16sp"
+        android:layout_alignBottom="@+id/imageView"
+
         android:layout_centerHorizontal="true" />
 
     <ImageButton

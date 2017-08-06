@@ -121,6 +121,10 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             vh.bookAuthorTextView.setText(books.get(position).getAuthor());
+
+            if (books.get(position).getCity()!=null) vh.cityTextView.setText(books.get(position).getCity().getTitle());
+            else vh.cityTextView.setText("");
+
             Glide
                     .with(parentContext)
                     //.load(books.get(position).getImage())
@@ -165,6 +169,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView bookTitleTextView;
         TextView bookAuthorTextView;
         TextView bookPriceTextView;
+        TextView cityTextView;
         ImageButton deleteBtn;
         ImageButton editBtn;
 
@@ -177,6 +182,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             bookTitleTextView = (TextView) v.findViewById(R.id.bookTitleId);
             bookAuthorTextView = (TextView) v.findViewById(R.id.bookAuthorId);
             bookPriceTextView = (TextView) v.findViewById(R.id.bookPriceId);
+            cityTextView = (TextView) v.findViewById(R.id.cityTextView);
             imageView = (ImageView) v.findViewById(R.id.imageView);
             deleteBtn = (ImageButton) v.findViewById(R.id.deleteBtn);
             editBtn = (ImageButton) v.findViewById(R.id.editBtn);
@@ -185,12 +191,6 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             itemView.setOnClickListener(this);
             editBtn.setOnClickListener(this);
             deleteBtn.setOnClickListener(this);
-            //imageView.setOnClickListener(this);
-
-
-
-
-
         }
 
         @Override

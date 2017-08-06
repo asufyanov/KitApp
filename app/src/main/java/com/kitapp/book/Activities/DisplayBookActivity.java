@@ -44,6 +44,7 @@ public class DisplayBookActivity extends AppCompatActivity {
     TextView ownerTextView;
     TextView genreTextView;
     TextView authorTextView;
+    TextView cityTextView;
     Book book;
     Boolean isLiked = null;
 
@@ -99,6 +100,7 @@ public class DisplayBookActivity extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         ownerTextView = (TextView) findViewById(R.id.ownerTextView);
         genreTextView = (TextView) findViewById(R.id.genreTextView);
+        cityTextView = (TextView) findViewById(R.id.cityTextView);
 
         ownerTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +123,8 @@ public class DisplayBookActivity extends AppCompatActivity {
 
             }
         });
+
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +168,8 @@ public class DisplayBookActivity extends AppCompatActivity {
         authorTextView.setText(getString(R.string.author) + ": " + book.getAuthor());
 
         priceTextView.setText(getString(R.string.price)+": "+book.getPrice() + "₸");
+
+        cityTextView.setText(getString(R.string.city)+": "+book.getCity().getTitle());
 
         getSupportActionBar().setTitle(book.getTitle());
 
