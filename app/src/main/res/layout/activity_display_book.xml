@@ -37,7 +37,7 @@
         android:id="@+id/callBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@drawable/button_border"
+        android:background="@drawable/button_border_blue"
         android:text="@string/send_whatsapp"
         android:textColor="@color/colorPrimary"
         android:theme="@style/MyButton"
