@@ -6,6 +6,7 @@
     <color name="colorAccent">#0038FF</color>
     <color name="bookTitleColor">#000000</color>
     <color name="headerAccaountColor">#CCB097</color>
+    <color name="grey">#D8D8D8</color>
 
     <!-- OVERWRITE THESE COLORS FOR A LIGHT THEME -->
     <!-- MaterialDrawer DEFAULT colors -->

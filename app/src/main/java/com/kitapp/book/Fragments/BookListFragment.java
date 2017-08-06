@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.backendless.Backendless;
@@ -24,12 +25,13 @@ import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
 import com.kitapp.book.Activities.AddBookActivity;
-import com.kitapp.book.Activities.BookListActivity;
-import com.kitapp.book.Activities.MainActivity;
+import com.kitapp.book.Activities.SelectCityActivity;
 import com.kitapp.book.Adapters.RecyclerBookAdapter;
 import com.kitapp.book.Models.Book;
+import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 import com.kitapp.book.R;
+import com.pixplicity.easyprefs.library.Prefs;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,19 +42,19 @@ import java.util.List;
  */
 public class BookListFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    RecyclerBookAdapter adapter;
-
-    SwipeRefreshLayout swipeContainer;
-    ProgressBar progressBar;
-
-    List<Book> books;
-    SearchView searchView;
-
+    private static final int SELECT_CITY_REQUEST_CODE = 4;
     public Boolean myLikedBooks = false;
     public Boolean myBooks = false;
     public Genre searchGenre = null;
     public BackendlessUser searchOwner = null;
+    public City searchCity = null;
+    RecyclerView recyclerView;
+    RecyclerBookAdapter adapter;
+    SwipeRefreshLayout swipeContainer;
+    ProgressBar progressBar;
+    List<Book> books;
+    SearchView searchView;
+    TextView cityTextView;
 
     View emptyState;
     Button btnAddBook;
@@ -72,13 +74,29 @@ public class BookListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_book_list, container, false);
         setReferences(v);
+        setCityPref();
         return v;
 
     }
 
+    private void setCityPref() {
+        String prefCityId = Prefs.getString("cityId", null);
+        if (prefCityId == null) return;
+        String prefCityTitle = Prefs.getString("cityTitle", null);
+
+        searchCity = new City();
+        searchCity.setObjectId(prefCityId);
+        searchCity.setTitle(prefCityTitle);
+        cityTextView.setText(prefCityTitle);
+
+    }
+
+
     private void setReferences(View v) {
 
-        swipeContainer = (SwipeRefreshLayout)v.findViewById(R.id.swipeContainer);
+        cityTextView = (TextView) v.findViewById(R.id.cityTextView);
+
+        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -91,7 +109,7 @@ public class BookListFragment extends Fragment {
         emptyState = v.findViewById(R.id.linearlay_empty_state);
         btnAddBook = (Button) v.findViewById(R.id.btn_add_book);
 
-        progressBar = (ProgressBar)v.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
 
         recyclerView = (RecyclerView) v.findViewById(R.id.swipe_target);
 
@@ -112,8 +130,8 @@ public class BookListFragment extends Fragment {
             public void onLoadMore() {
                 addProgressBarToAdapter();
                 int incr = 0;
-                if (books.get(books.size()-1)==null) incr--;
-                addBooksToRecycleView(books.size()+incr, searchView.getQuery().toString(), 2, "onLoadMore");
+                if (books.get(books.size() - 1) == null) incr--;
+                addBooksToRecycleView(books.size() + incr, searchView.getQuery().toString(), 2, "onLoadMore");
 
             }
         });
@@ -123,6 +141,15 @@ public class BookListFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddBookActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        cityTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SelectCityActivity.class);
+
+                startActivityForResult(intent, SELECT_CITY_REQUEST_CODE);
             }
         });
 
@@ -138,7 +165,7 @@ public class BookListFragment extends Fragment {
 
     private void removeProgressBarFromAdapter() {
         if (books.isEmpty()) return;
-        if (books.get(books.size()-1)!=null) return;
+        if (books.get(books.size() - 1) != null) return;
         books.remove(books.size() - 1);
         adapter.notifyItemRemoved(books.size());
         adapter.setLoaded(true);
@@ -148,7 +175,7 @@ public class BookListFragment extends Fragment {
     public void addBooksToRecycleView(int i, String s, int progress, String from) {
 
         long actualSearchTime = (Calendar.getInstance()).getTimeInMillis();
-        if (actualSearchTime < lastSearchTime + 1000) return;
+        //if (actualSearchTime < lastSearchTime + 1000) return;
         emptyState.setVisibility(View.GONE);
 
 
@@ -178,10 +205,13 @@ public class BookListFragment extends Fragment {
         if (searchOwner != null) {
             whereClause += " and owner.objectId='" + searchOwner.getObjectId() + "'";
         }
+        if (searchCity != null) {
+            whereClause += " and city.objectId='" + searchCity.getObjectId() + "'";
+        }
         whereClause += " and (enabled=true OR enabled is null)";
 
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause( whereClause );
+        queryBuilder.setWhereClause(whereClause);
         //queryBuilder.setSortBy( "name", "age DESC" );
         queryBuilder.setSortBy("created DESC");
 
@@ -195,6 +225,8 @@ public class BookListFragment extends Fragment {
 
         queryBuilder.setRelated("owner");
         queryBuilder.setRelated("genre");
+        queryBuilder.setRelated("city");
+
         //query.setQueryOptions(qo);
         Backendless.Persistence.of(Book.class).find(queryBuilder, new AsyncCallback<List<Book>>() {
             @Override
@@ -208,7 +240,8 @@ public class BookListFragment extends Fragment {
 
                     //Toast.makeText(getActivity(), getString(R.string.no_books), Toast.LENGTH_SHORT).show();
                 } else if (bookBackendlessCollection.size() == 0 && books.size() != 0) {
-                    if (getActivity()!=null) Toast.makeText(getActivity(), getString(R.string.no_books_left_else), Toast.LENGTH_SHORT).show();
+                    if (getActivity() != null)
+                        Toast.makeText(getActivity(), getString(R.string.no_books_left_else), Toast.LENGTH_SHORT).show();
                     adapter.setLoaded(false);
                 }
                 int size = books.size();
@@ -219,13 +252,12 @@ public class BookListFragment extends Fragment {
                 //recyclerView.setAdapter(adapter);
 
 
-
             }
 
             @Override
             public void handleFault(BackendlessFault backendlessFault) {
                 Toast.makeText(getActivity(), getString(R.string.fail_to_load_books), Toast.LENGTH_SHORT).show();
-                Log.d(this.getClass().getSimpleName(), backendlessFault.getMessage()+" "+backendlessFault.getDetail());
+                Log.d(this.getClass().getSimpleName(), backendlessFault.getMessage() + " " + backendlessFault.getDetail());
                 swipeContainer.setRefreshing(false);
                 removeProgressBarFromAdapter();
             }
@@ -234,30 +266,27 @@ public class BookListFragment extends Fragment {
 
 
     }
+
     public void onRefresh() {
 
-        long actualSearchTime = (Calendar.getInstance()).getTimeInMillis();
-        if (actualSearchTime > lastSearchTime + 1000) {
 
-            swipeContainer.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeContainer.setRefreshing(true);
-                }
-            });
+        swipeContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeContainer.setRefreshing(true);
+            }
+        });
 
-            adapter.setLoaded(true);
-            int bookSize = books.size();
-            books.clear();
-            adapter.notifyItemRangeRemoved(0, bookSize);
+        adapter.setLoaded(true);
+        int bookSize = books.size();
+        books.clear();
+        adapter.notifyItemRangeRemoved(0, bookSize);
+        Log.d("AzizOnRefresh", "searchString = " + searchView.getQuery().toString());
 
+        //swipeToLoadLayout.setRefreshing(false);
 
+        addBooksToRecycleView(0, searchView.getQuery().toString(), 1, "onRefresh");
 
-
-            //swipeToLoadLayout.setRefreshing(false);
-
-            addBooksToRecycleView(0, searchView.getQuery().toString(), 1, "onRefresh");
-        }
     }
 
     //@Override
@@ -266,7 +295,7 @@ public class BookListFragment extends Fragment {
 
     }
 
-    public void deleteBook (final Book book, final int adapterPosition){
+    public void deleteBook(final Book book, final int adapterPosition) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Удалить?");
@@ -317,11 +346,6 @@ public class BookListFragment extends Fragment {
     }
 
 
-
-
-
-
-
     public List<Book> getBooks() {
         return books;
     }
@@ -340,5 +364,24 @@ public class BookListFragment extends Fragment {
 
     public RecyclerBookAdapter getAdapter() {
         return adapter;
+    }
+
+    public void setSearchCity(City searchCity) {
+        if (searchCity!=null){
+            Prefs.putString("cityTitle", searchCity.getTitle());
+            Prefs.putString("cityId", searchCity.getObjectId());
+            this.searchCity = searchCity;
+            cityTextView.setText(searchCity.getTitle());
+        } else {
+            Prefs.remove("cityTitle");
+            Prefs.remove("cityId");
+            this.searchCity = null;
+            cityTextView.setText(getString(R.string.wholeKazakhstan));
+        }
+
+
+
+        onRefresh();
+
     }
 }

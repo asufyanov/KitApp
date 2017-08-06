@@ -1,16 +1,12 @@
 package com.kitapp.book.Activities;
 
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -19,11 +15,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +27,10 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.files.BackendlessFile;
-import com.backendless.persistence.DataQueryBuilder;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.kitapp.book.Adapters.SpinnerGenreAdapter;
 import com.kitapp.book.Models.Book;
+import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 import com.kitapp.book.MyDataHolder;
 import com.kitapp.book.R;
@@ -50,7 +43,8 @@ import java.util.Random;
 
 public class AddBookActivity extends AppCompatActivity {
 
-    private static final int SELECT_GENRE_REQUEST_CODE = 3 ;
+    private static final int SELECT_GENRE_REQUEST_CODE = 3;
+    private static final int SELECT_CITY_REQUEST_CODE = 4;
     protected View view;
     protected ImageView imgViewCamera;
     protected int LOAD_IMAGE_CAMERA = 0, REQUEST_CROP_PICTURE = 1, LOAD_IMAGE_GALLARY = 2;
@@ -65,11 +59,13 @@ public class AddBookActivity extends AppCompatActivity {
     MenuItem saveMenuBtn;
 
     TextView genreTextView;
+    TextView cityTextView;
 
     Book editedBook = null;
     String oldImageUrl = null;
     ArrayList<Genre> genreList;
-    String selectedGenreId;
+    String selectedGenreId = null;
+    String selectedCityId = null;
     boolean isActivityJustStarted = true;
     private Uri picUri;
     private Button btn;
@@ -96,7 +92,7 @@ public class AddBookActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getString(R.string.all_books));
-        if (editedBook!=null) toolbar.setTitle(getString(R.string.edit));
+        if (editedBook != null) toolbar.setTitle(getString(R.string.edit));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -110,6 +106,7 @@ public class AddBookActivity extends AppCompatActivity {
         loginForm = findViewById(R.id.login_form);
         btn = (Button) findViewById(R.id.saveBtn);
         genreTextView = (TextView) findViewById(R.id.genreTextView);
+        cityTextView = (TextView) findViewById(R.id.cityTextView);
         genreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,8 +115,14 @@ public class AddBookActivity extends AppCompatActivity {
                 startActivityForResult(intent, SELECT_GENRE_REQUEST_CODE);
             }
         });
+        cityTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplication(), SelectCityActivity.class);
 
-
+                startActivityForResult(intent, SELECT_CITY_REQUEST_CODE);
+            }
+        });
 
 
         imgViewCamera.setOnClickListener(new View.OnClickListener() {
@@ -196,7 +199,6 @@ public class AddBookActivity extends AppCompatActivity {
         if (requestCode == LOAD_IMAGE_CAMERA && resultCode == RESULT_OK) {
 
 
-
             Uri croppedImage = Uri.fromFile(croppedImageFile);
             CropImageIntentBuilder cropImage = new CropImageIntentBuilder(3, 4, 600, 800, croppedImage);
             cropImage.setOutlineColor(0xFF03A9F4);
@@ -246,12 +248,19 @@ public class AddBookActivity extends AppCompatActivity {
                     }
                 }
             }
-        } else  if (requestCode == SELECT_GENRE_REQUEST_CODE){
-            if (data!=null){
-                String genreAsString =  data.getExtras().getString("genre");
+        } else if (requestCode == SELECT_GENRE_REQUEST_CODE) {
+            if (data != null) {
+                String genreAsString = data.getExtras().getString("genre");
                 Genre genre = new Gson().fromJson(genreAsString, Genre.class);
-                genreTextView.setText(genre.getTitle()+" >");
+                genreTextView.setText(genre.getTitle() + " >");
                 selectedGenreId = genre.getObjectId();
+            }
+        } else if (requestCode == SELECT_CITY_REQUEST_CODE) {
+            if (data != null) {
+                String cityAsString = data.getExtras().getString("city");
+                City city = new Gson().fromJson(cityAsString, City.class);
+                cityTextView.setText(city.getTitle()+ " >");
+                selectedCityId = city.getObjectId();
             }
         }
     }
@@ -260,7 +269,6 @@ public class AddBookActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.addbook_menu, menu);
         saveMenuBtn = menu.findItem(R.id.saveBtn);
-
 
 
         saveMenuBtn.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
@@ -284,7 +292,7 @@ public class AddBookActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
 
@@ -320,6 +328,7 @@ public class AddBookActivity extends AppCompatActivity {
         if (descriptionEditText.getText().toString().trim() != null)
             newBook.setDescr(descriptionEditText.getText().toString());
         if (selectedGenreId != null) newBook.setGenreId(selectedGenreId);
+        if (selectedCityId != null) newBook.setCityId(selectedCityId);
 
 
         if (sendFile != null) { //LOAD FROM NEW PHOTO
@@ -367,6 +376,7 @@ public class AddBookActivity extends AppCompatActivity {
         authorEditText.setError(null);
         priceEditText.setError(null);
         descriptionEditText.setError(null);
+        String toastMessage = "";
 
 
         if (TextUtils.isEmpty(titleEditText.getText().toString())) {
@@ -379,6 +389,8 @@ public class AddBookActivity extends AppCompatActivity {
             titleEditText.setError(getString(R.string.select_picture));
             focusView = imgViewCamera;
             isValid = false;
+            toastMessage = getString(R.string.select_picture);
+
         }
 
         if (TextUtils.isEmpty(authorEditText.getText().toString())) {
@@ -397,7 +409,16 @@ public class AddBookActivity extends AppCompatActivity {
             focusView = descriptionEditText;
             isValid = false;
         }
+
+        if (selectedGenreId == null) {
+            isValid = false;
+            focusView = genreTextView;
+            toastMessage = getString(R.string.select_genre);
+        }
+
         if (isValid == false) focusView.requestFocus();
+        if (toastMessage != null && toastMessage.isEmpty() == false)
+            Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show();
 
 
         return isValid;
@@ -494,10 +515,17 @@ public class AddBookActivity extends AppCompatActivity {
             titleEditText.setText(editedBook.getTitle());
             descriptionEditText.setText(editedBook.getDescr());
             selectedGenreId = editedBook.getGenreId();
+            selectedCityId = editedBook.getCityId();
 
 
-            genreTextView.setText(editedBook.getGenre().getTitle());
-            selectedGenreId = editedBook.getGenreId();
+            if (editedBook.getGenre() != null) {
+                genreTextView.setText(editedBook.getGenre().getTitle());
+                selectedGenreId = editedBook.getGenreId();
+            }
+            if (editedBook.getCity() != null) {
+                genreTextView.setText(editedBook.getCity().getTitle());
+                selectedCityId = editedBook.getCityId();
+            }
 
 
             oldImageUrl = editedBook.getImage();

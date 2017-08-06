@@ -19,6 +19,10 @@ public class Book implements Serializable{
     private String ownerId;
 
 
+    private City city;
+    private String cityId;
+
+
 
     String genreId;
     private String title;
@@ -141,6 +145,22 @@ public class Book implements Serializable{
 
     public void setGenre(Genre genre) {
         this.genre = genre;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
     }
 
 

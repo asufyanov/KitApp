@@ -12,30 +12,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.kitapp.book.Adapters.MyNavigationDrawer;
 import com.kitapp.book.Adapters.MySearchView;
 import com.kitapp.book.Adapters.ViewPagerAdapter;
 import com.kitapp.book.Fragments.BookListFragment;
 import com.kitapp.book.Fragments.GenreListFragment;
+import com.kitapp.book.Models.City;
+import com.kitapp.book.Models.Genre;
 import com.kitapp.book.R;
+import com.pixplicity.easyprefs.library.Prefs;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int SELECT_CITY_REQUEST_CODE = 4;
+
 
     Toolbar toolbar;
 
     BookListFragment blf = new BookListFragment();
     GenreListFragment glf = new GenreListFragment();
     FloatingActionButton fab;
-
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-
     SearchView searchView;
-
     CountDownTimer timer;
     String prevSearch = null;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
 
 
     private void setReferences() {
@@ -66,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
 
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
 
     }
+
     public void selectPage(int pageIndex) {
         tabLayout.setScrollPosition(pageIndex, 0f, true);
         viewPager.setCurrentItem(pageIndex);
@@ -113,5 +118,32 @@ public class MainActivity extends AppCompatActivity {
 
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.filterMenuItem){
+            //Intent intent = new Intent(this, )
+            Intent intent = new Intent(getApplication(), SelectCityActivity.class);
+
+            startActivityForResult(intent, SELECT_CITY_REQUEST_CODE);
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SELECT_CITY_REQUEST_CODE && resultCode == RESULT_OK){
+            if (data!=null){
+                City city = new Gson().fromJson(data.getExtras().getString("city"), City.class);
+
+                blf.setSearchCity (city);
+
+            }
+
+        }
     }
 }

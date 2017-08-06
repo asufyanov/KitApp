@@ -16,6 +16,7 @@
     <string name="edit">Изменить</string>
     <string name="select_picture">Выберите изображение</string>
     <string name="select_genre">Выберите Жанр ></string>
+    <string name="select_city">Выберите Город ></string>
     <string name="enter_book_name">Введите название книги</string>
     <string name="enter_author">Введите автора</string>
     <string name="enter_price">Введите цену книги</string>
@@ -48,6 +49,7 @@
     <string name="call">Позвонить</string>
 
     <string name="owner">Владелец:</string>
+    <string name="price">Цена</string>
 
     <string name="wtsp_is_not_installed">Whatsapp не установлен</string>
     <string name="send_whatsapp">Написать в Whatsapp</string>
@@ -60,14 +62,12 @@
     <string name="data_will_not_lost">Ваши данные не будут потеряны</string>
 
 
-
-
-
-
-
-
     <!--    WELCOME ACTIVITY !-->
     <string name="restart">Перезапустить</string>
     <string name="authorization">Авторизация</string>
+
+
+    <!--    CITY ACTIVITY   !-->
+    <string name="wholeKazakhstan">Весь Казахстан</string>
 
 </resources>

@@ -15,14 +15,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.backendless.BackendlessUser;
+import com.google.gson.Gson;
 import com.kitapp.book.Adapters.MyNavigationDrawer;
 import com.kitapp.book.Adapters.MySearchView;
 import com.kitapp.book.Fragments.BookListFragment;
+import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 import com.kitapp.book.R;
 
 public class BookListActivity extends AppCompatActivity {
 
+    private static final int SELECT_CITY_REQUEST_CODE = 4 ;
     Toolbar toolbar;
     FloatingActionButton fab;
     SearchView searchView;
@@ -31,7 +34,7 @@ public class BookListActivity extends AppCompatActivity {
 
     long lastSearchTime;
     CountDownTimer timer;
-    String prevSearch=null;
+    String prevSearch = null;
 
     BookListFragment blf = new BookListFragment();
 
@@ -50,6 +53,12 @@ public class BookListActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
         }
+        if (item.getItemId()==R.id.filterMenuItem){
+            //Intent intent = new Intent(this, )
+            Intent intent = new Intent(getApplication(), SelectCityActivity.class);
+
+            startActivityForResult(intent, SELECT_CITY_REQUEST_CODE);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -58,14 +67,26 @@ public class BookListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MySearchView.createMySearchView(this, menu, searchView, blf, null);
         blf.onRefresh();
-
-
-
         return true;
 
     }
 
-    private void setReferences(){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SELECT_CITY_REQUEST_CODE && resultCode == RESULT_OK){
+            if (data!=null){
+                City city = new Gson().fromJson(data.getExtras().getString("city"), City.class);
+
+                blf.setSearchCity (city);
+
+            }
+
+        }
+    }
+
+    private void setReferences() {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         blf = new BookListFragment();
         fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -84,19 +105,19 @@ public class BookListActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
-
         openFragment();
 
         MyNavigationDrawer.createDrawer(this, toolbar);
 
     }
 
-    private void openFragment(){
+    private void openFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.frameLayout, blf);
         ft.commit();
 
     }
+
     private void setSearchFilters() {
         //      1   Все Книги
         //      2   Мои Книги
@@ -107,7 +128,6 @@ public class BookListActivity extends AppCompatActivity {
 
         if (bundle != null) {
             command = bundle.getInt("command");
-
 
 
             if (command == 1) {
@@ -136,11 +156,13 @@ public class BookListActivity extends AppCompatActivity {
 
             if (getIntent().getSerializableExtra("owner") != null) {
                 blf.searchOwner = (BackendlessUser) getIntent().getSerializableExtra("owner");
-                String nameSurname="";
-                if (blf.searchOwner.getProperty("name")!=null) nameSurname+=blf.searchOwner.getProperty("name")+" ";
-                if (blf.searchOwner.getProperty("surname")!=null) nameSurname+=blf.searchOwner.getProperty("surname");
-                if (nameSurname.equals("")) nameSurname=getString(R.string.users_books);
-                toolbar.setTitle(getString(R.string.books)+": "+nameSurname);
+                String nameSurname = "";
+                if (blf.searchOwner.getProperty("name") != null)
+                    nameSurname += blf.searchOwner.getProperty("name") + " ";
+                if (blf.searchOwner.getProperty("surname") != null)
+                    nameSurname += blf.searchOwner.getProperty("surname");
+                if (nameSurname.equals("")) nameSurname = getString(R.string.users_books);
+                toolbar.setTitle(getString(R.string.books) + ": " + nameSurname);
             }
 
         }

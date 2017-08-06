@@ -2,6 +2,7 @@ package com.kitapp.book;
 
 import android.util.Log;
 
+import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class MyDataHolder {
 
     public Boolean loadingGenres = false;
     public ArrayList<Genre> genreTitles = null;
+    public ArrayList<City> cities = null;
 
 
 

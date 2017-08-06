@@ -1,7 +1,6 @@
 package com.kitapp.book.Activities;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,6 +24,7 @@ import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
 import com.kitapp.book.BackendlessValues;
+import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 import com.kitapp.book.MyDataHolder;
 import com.kitapp.book.R;
@@ -35,13 +35,13 @@ import java.util.List;
 public class WelcomeActivity extends AppCompatActivity {
 
     final int REQUEST_NAME_SURNAME = 1;
+    final String password = "123AAA123!";
     Button registerBtn;
     Button recreateBtn;
     View mProgressView;
     String userId;
     String phone = "";
-    final String password = "123AAA123!";
-    String userToken=null;
+    String userToken = null;
 
 
     @Override
@@ -53,20 +53,28 @@ public class WelcomeActivity extends AppCompatActivity {
 
         setReferences();
 
-        if (MyDataHolder.getInstance().genreTitles==null) loadGenres();
+        Backendless.Messaging.registerDevice("896051692086", "default", new AsyncCallback<Void>() {
+            @Override
+            public void handleResponse(Void response) {
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+            }
+        });
+
+        if (MyDataHolder.getInstance().genreTitles == null && MyDataHolder.getInstance().cities == null ) loadGenres();
         else checkAuthorization();
-
-
-
-
 
 
     }
 
-    private void loadGenres(){
+    private void loadGenres() {
         MyDataHolder.getInstance().loadingGenres = true;
 
-        DataQueryBuilder queryBuilder = DataQueryBuilder.create();
+        final DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setPageSize(70);
 
 
@@ -74,7 +82,35 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void handleResponse(List<Genre> genres) {
 
-                checkAuthorization();
+                queryBuilder.setSortBy("created ASC");
+
+
+                Backendless.Data.of(City.class).find(queryBuilder, new AsyncCallback<List<City>>() {
+                    @Override
+                    public void handleResponse(List<City> response) {
+                        checkAuthorization();
+                        MyDataHolder.getInstance().cities = new ArrayList<City>();
+                        MyDataHolder.getInstance().cities.add(null);
+                        MyDataHolder.getInstance().cities.addAll(response);
+
+                    }
+
+                    @Override
+                    public void handleFault(BackendlessFault backendlessFault) {
+                        MyDataHolder.getInstance().loadingGenres = false;
+                        String s = backendlessFault.getCode();
+                        if (s.equals("3064")) {
+                            UserTokenStorageFactory.instance().getStorage().set(null);
+                            recreate();
+                        }
+
+                        showProgress(false);
+                        registerBtn.setVisibility(View.GONE);
+                        recreateBtn.setVisibility(View.VISIBLE);
+
+                    }
+                });
+
 
                 Log.d("AddBook", "genre size = " + genres.size());
 
@@ -87,7 +123,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void handleFault(BackendlessFault backendlessFault) {
                 MyDataHolder.getInstance().loadingGenres = false;
                 String s = backendlessFault.getCode();
-                if (s.equals("3064")){
+                if (s.equals("3064")) {
                     UserTokenStorageFactory.instance().getStorage().set(null);
                     recreate();
                 }
@@ -104,8 +140,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private void setReferences() {
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
 
         registerBtn = (Button) findViewById(R.id.button);
         recreateBtn = (Button) findViewById(R.id.recreateBtn);
@@ -114,7 +148,6 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 registerForm();
-
 
 
             }
@@ -129,7 +162,6 @@ public class WelcomeActivity extends AppCompatActivity {
         mProgressView = findViewById(R.id.login_progress);
 
         userId = UserIdStorageFactory.instance().getStorage().get();
-
 
 
         userToken = UserTokenStorageFactory.instance().getStorage().get();
@@ -172,10 +204,11 @@ public class WelcomeActivity extends AppCompatActivity {
             public void handleFault(BackendlessFault fault) {
                 //Toast.makeText(getApplicationContext(), "Unable to check Authorization", Toast.LENGTH_SHORT).show();
                 isLogined[0] = false;
-                Log.d("AzizWelcomeActivity", "isValidLogin "+fault.getMessage());
+                Log.d("AzizWelcomeActivity", "isValidLogin " + fault.getMessage());
 
 
-                if (fault.getCode()!="3064") Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG).show();
+                if (fault.getCode() != "3064")
+                    Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG).show();
                 showProgress(false);
             }
 
@@ -290,11 +323,12 @@ public class WelcomeActivity extends AppCompatActivity {
                         }
 
                     }
+
                     @Override
                     public void handleFault(BackendlessFault fault) {
                         Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG);
                         showProgress(false);
-                        Log.d("AzizWelcomeActivity", "findLogin "+fault.getMessage());
+                        Log.d("AzizWelcomeActivity", "findLogin " + fault.getMessage());
 
 
                     }
@@ -333,7 +367,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-                Log.d("AzizWelcomeActivity", "resisterUserFail "+fault.getMessage());
+                Log.d("AzizWelcomeActivity", "resisterUserFail " + fault.getMessage());
                 Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG);
                 showProgress(false);
             }
@@ -363,7 +397,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void handleFault(BackendlessFault fault) {
                 Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG);
                 showProgress(false);
-                Log.d("AzizWelcomeActivity", "loginById "+fault.getMessage());
+                Log.d("AzizWelcomeActivity", "loginById " + fault.getMessage());
 
 
             }
@@ -371,11 +405,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
     }
 
-    private void loginUser(String phone, String password){
+    private void loginUser(String phone, String password) {
         Backendless.UserService.login(phone, password, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser response) {
-                //Toast.makeText(getApplicationContext(), "CUR USER LOGGINED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "CUR USER LOGGINED", Toast.LENGTH_SHORT).show();
                 //Backendless.UserService.setCurrentUser(response);
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -388,13 +422,12 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void handleFault(BackendlessFault fault) {
                 Toast.makeText(getApplicationContext(), "Проблема с авторизацией, перезагрузите приложение", Toast.LENGTH_LONG).show();
-                Log.d("AzizWelcomeActivity", "loginUser "+fault.getMessage());
+                Log.d("AzizWelcomeActivity", "loginUser " + fault.getMessage());
                 showProgress(false);
 
             }
         }, true);
     }
-
 
 
     @Override

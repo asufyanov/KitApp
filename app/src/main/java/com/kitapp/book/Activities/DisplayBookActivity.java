@@ -65,10 +65,10 @@ public class DisplayBookActivity extends AppCompatActivity {
         setReferences();
         MyNavigationDrawer.createDrawer(this, toolbar);
     }
+
     private void setReferences() {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -81,7 +81,6 @@ public class DisplayBookActivity extends AppCompatActivity {
         progressBar.setPadding(padding_in_px, padding_in_px, padding_in_px, padding_in_px);
 
 
-
         Intent i = getIntent();
         Bundle b = i.getExtras();
         String bookAsString = getIntent().getExtras().getString("book");
@@ -91,7 +90,7 @@ public class DisplayBookActivity extends AppCompatActivity {
         phone = (String) book.getOwner().getProperty("username");
 
 
-        callBtn = (Button)findViewById(R.id.callBtn);
+        callBtn = (Button) findViewById(R.id.callBtn);
         descriptionTextView = (TextView) findViewById(R.id.descriptionTextView);
 
         imageView = (ImageView) findViewById(R.id.bookImageView);
@@ -142,8 +141,8 @@ public class DisplayBookActivity extends AppCompatActivity {
                 if (isWhatsappInstalled) {
 
                     Intent sendIntent = new Intent("android.intent.action.MAIN");
-                    sendIntent.setComponent(new ComponentName("com.whatsapp","com.whatsapp.Conversation"));
-                    sendIntent.putExtra("jid",     PhoneNumberUtils.stripSeparators(phone)+"@s.whatsapp.net");//phone number without "+" prefix
+                    sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+                    sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phone) + "@s.whatsapp.net");//phone number without "+" prefix
 
                     startActivity(sendIntent);
                 } else {
@@ -155,7 +154,6 @@ public class DisplayBookActivity extends AppCompatActivity {
                 }
 
 
-
             }
         });
 
@@ -163,9 +161,9 @@ public class DisplayBookActivity extends AppCompatActivity {
         if (user == null) Log.d("displayBook", "owner==null");
         else Log.d("displayBook", user.toString());
 
-        authorTextView.setText(getString(R.string.author)+": "+ book.getAuthor());
+        authorTextView.setText(getString(R.string.author) + ": " + book.getAuthor());
 
-        priceTextView.setText(book.getPrice() + " "+ getString(R.string.tenge));
+        priceTextView.setText(getString(R.string.price)+": "+book.getPrice() + "₸");
 
         getSupportActionBar().setTitle(book.getTitle());
 
@@ -177,13 +175,13 @@ public class DisplayBookActivity extends AppCompatActivity {
         if (tempName != null) name += (String) book.getOwner().getProperty("name");
         if (tempSurname != null) name += " " + (String) book.getOwner().getProperty("surname");
         if (name.length() < 1) name = (String) book.getOwner().getProperty("username");
-        ownerTextView.setText(ownerTextView.getText()+" "+ name+"");
+        ownerTextView.setText(ownerTextView.getText() + " " + name + "");
 
         //ЗАБИВАЕМ ЖАНР
         String genre = "";
-        if (book.getGenre()!=null) genre += book.getGenre().getTitle();
+        if (book.getGenre() != null) genre += book.getGenre().getTitle();
         if (genre.length() == 0) genre = getString(R.string.not_entered);
-        genreTextView.setText(getString(R.string.genre)+ ": " + genre);
+        genreTextView.setText(getString(R.string.genre) + ": " + genre);
 
         descriptionTextView.setText(book.getDescr());
         Glide
@@ -207,7 +205,7 @@ public class DisplayBookActivity extends AppCompatActivity {
 
         String curUserObjectId = Backendless.UserService.CurrentUser().getObjectId();
 
-        String whereClause = "bookmarks.objectId="+"'"+book.getObjectId()+"' and objectId='"+curUserObjectId+"'";
+        String whereClause = "bookmarks.objectId=" + "'" + book.getObjectId() + "' and objectId='" + curUserObjectId + "'";
         DataQueryBuilder dataQueryBuilder = DataQueryBuilder.create();
         dataQueryBuilder.setSortBy("created DESC");
         dataQueryBuilder.setWhereClause(whereClause);
@@ -217,7 +215,7 @@ public class DisplayBookActivity extends AppCompatActivity {
             public void handleResponse(List<BackendlessUser> response) {
                 likeBtn.setEnabled(true);
                 likeBtn.setActionView(null);
-                if (response.size()!=0){
+                if (response.size() != 0) {
                     likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_filled));
                     isLiked = true;
                 } else {
@@ -262,6 +260,7 @@ public class DisplayBookActivity extends AppCompatActivity {
                 likeBtn.setActionView(null);
                 likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_filled));
             }
+
             @Override
             public void handleFault(BackendlessFault fault) {
                 isLiked = false;
@@ -275,7 +274,7 @@ public class DisplayBookActivity extends AppCompatActivity {
 
     }
 
-    private void unlike (Book book) {
+    private void unlike(Book book) {
         likeBtn.setEnabled(false);
         likeBtn.setActionView(progressBar);
 
@@ -291,6 +290,7 @@ public class DisplayBookActivity extends AppCompatActivity {
                 likeBtn.setActionView(null);
                 likeBtn.setIcon(getResources().getDrawable(R.drawable.heart_empty));
             }
+
             @Override
             public void handleFault(BackendlessFault fault) {
                 isLiked = true;

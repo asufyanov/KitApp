@@ -4,9 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@color/colorBackground"
+
     tools:context="com.kitapp.book.Activities.BookListActivity">
 
+    <TextView
+        android:id="@+id/cityTextView"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/wholeKazakhstan"
+        android:textSize="13sp"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_marginTop="20dp"
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,7 +31,6 @@
             android:layout_height="fill_parent"
 
             android:layout_alignParentEnd="true"
-            android:background="@color/colorBackground"
 
             ></android.support.v7.widget.RecyclerView>
 

@@ -52,6 +52,8 @@ public class MySearchView {
                     ma.selectPage(0);
                 }
 
+                if (timer[0]!=null) timer[0].cancel();
+
 
                 int size = blf.getBooks().size();
                 blf.getBooks().clear();
@@ -59,6 +61,7 @@ public class MySearchView {
 
                 //blf.addBooksToRecycleView(0, finalSearchView.getQuery().toString(), 1, "onQuerySubmit");
                 blf.onRefresh();
+                Log.d("AzizSearchView", "onRefresh submit 1");
                 finalSearchView.clearFocus();
                 return false;
             }
@@ -80,6 +83,8 @@ public class MySearchView {
                         @Override
                         public void onFinish() {
                             blf.onRefresh();
+                            Log.d("AzizSearchView", "onRefresh textChange 1");
+
 
                         }
                     }.start();
@@ -94,14 +99,20 @@ public class MySearchView {
                         @Override
                         public void onFinish() {
                             blf.onRefresh();
+                            Log.d("AzizSearchView", "onRefresh textChange 2");
+
                         }
                     }.start();
                 }
                 if (finalSearchView.getQuery().toString().length() == 0) {
                     blf.onRefresh();
+                    Log.d("AzizSearchView", "onRefresh textChange clear");
+
                     finalSearchView.clearFocus();
 
                     finalSearchView.setIconified(true);
+
+                    if (timer[0]!=null) timer[0].cancel();
 
 
                 }

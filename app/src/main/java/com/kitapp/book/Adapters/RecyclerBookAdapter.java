@@ -114,7 +114,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 vh.bookPriceTextView.setText(parentContext.getString(R.string.chocolate));
 
             } else {
-                vh.bookPriceTextView.setText("" + books.get(position).getPrice()+" "+parentContext.getString(R.string.tenge).toLowerCase());
+                vh.bookPriceTextView.setText("" + books.get(position).getPrice()+" "+'₸');
 
             }
             //vh.bookPriceTextView.setText("" + books.get(position).getGenre().getTitle());

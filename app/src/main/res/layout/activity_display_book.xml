@@ -33,11 +33,22 @@
         app:srcCompat="@drawable/ic_call_black_24dp"
 
         />
+    <Button
+        android:id="@+id/callBtn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/button_border"
+        android:text="@string/send_whatsapp"
+        android:textColor="@color/colorPrimary"
+        android:theme="@style/MyButton"
+        android:layout_gravity="bottom"
+        />
 
     <android.support.v4.widget.NestedScrollView
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
@@ -45,18 +56,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="35dp"
-            android:paddingRight="35dp"
-            android:paddingTop="15dp">
-
-            <ImageView
-                android:id="@+id/bookImageView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-
-                tools:layout_height="200dp" />
-
+            android:paddingLeft=    "20dp"
+            android:paddingRight=   "20dp"
+            >
 
             <TextView
                 android:id="@+id/authorTextView"
@@ -65,18 +67,19 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
                 android:text="Автор: А.С Пушкин"
+                android:textAlignment="center"
 
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/genreTextView"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/bookImageView"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
 
-                android:layout_marginBottom="5dp"
-                android:elevation="20dp"
-                android:text="Жанр"
-                android:textSize="18sp" />
+                tools:layout_height="200dp" />
+
 
             <TextView
                 android:id="@+id/ownerTextView"
@@ -87,7 +90,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-
             <TextView
                 android:id="@+id/priceView"
 
@@ -95,18 +97,29 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginBottom="10dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="1dp"
                 android:text="1000 tenge"
                 android:textSize="18sp"
 
                 />
 
             <TextView
+                android:id="@+id/genreTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="5dp"
+                android:elevation="20dp"
+                android:text="Жанр"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Описание:"
                 android:textSize="18sp"
-                android:textStyle="bold"
                 android:layout_marginTop="15dp"
 
                 />
@@ -116,21 +129,12 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="OLOLO"
+                android:text="Def text"
                 android:textSize="18sp"
 
                 />
 
-            <Button
-                android:id="@+id/callBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/button_border"
-                android:text="@string/send_whatsapp"
-                android:textColor="@color/colorAccent"
-                android:theme="@style/MyButton" />
+
 
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

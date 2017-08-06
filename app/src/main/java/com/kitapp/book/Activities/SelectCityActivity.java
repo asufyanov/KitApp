@@ -1,30 +1,28 @@
 package com.kitapp.book.Activities;
 
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.kitapp.book.Fragments.GenreListFragment;
+import com.kitapp.book.Fragments.CityListFragment;
 import com.kitapp.book.R;
 
-public class SelectGenreActivity extends AppCompatActivity {
-
-    GenreListFragment glf = new GenreListFragment();
+public class SelectCityActivity extends AppCompatActivity {
     Toolbar toolbar;
+    CityListFragment clf = new CityListFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_genre);
+        setContentView(R.layout.activity_select_city);
         setReferences();
+
     }
 
-    private void setReferences() {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    private void setReferences(){
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -41,7 +39,7 @@ public class SelectGenreActivity extends AppCompatActivity {
 
     private void openFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.frameLayout, glf);
+        ft.add(R.id.frameLayout, clf);
         ft.commit();
 
     }
@@ -61,5 +59,4 @@ public class SelectGenreActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
