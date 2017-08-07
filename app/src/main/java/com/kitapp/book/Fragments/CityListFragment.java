@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+import com.kitapp.book.Activities.AddBookActivity;
+import com.kitapp.book.Activities.SelectCityActivity;
 import com.kitapp.book.Adapters.RecyclerCityAdapter;
 import com.kitapp.book.Models.City;
 import com.kitapp.book.MyDataHolder;
@@ -64,6 +66,9 @@ public class CityListFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
         cities.addAll(MyDataHolder.getInstance().cities);
+
+        SelectCityActivity act = (SelectCityActivity)getActivity();
+        if (act.getRemoveAllKz()==true) cities.remove(0);
 
 
         adapter.notifyDataSetChanged();

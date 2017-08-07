@@ -17,10 +17,5 @@
         android:choiceMode="singleChoice"
         android:paddingBottom="20dp"
         />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="55sp"
-        android:text="dsadsad"/>
 
 </FrameLayout>

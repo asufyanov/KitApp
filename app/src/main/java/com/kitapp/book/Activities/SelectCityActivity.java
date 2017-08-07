@@ -14,6 +14,10 @@ public class SelectCityActivity extends AppCompatActivity {
     Toolbar toolbar;
     CityListFragment clf = new CityListFragment();
 
+
+
+    Boolean removeAllKz = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,15 +30,25 @@ public class SelectCityActivity extends AppCompatActivity {
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.select_genre));
+        toolbar.setTitle(getString(R.string.select_city));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
+        if (getIntent().getExtras()!=null){
+            if (getIntent().getExtras().getBoolean("remove")==true){
+                removeAllKz = true;
+            }
+        }
+
         openFragment();
 
 
+    }
+
+    public Boolean getRemoveAllKz() {
+        return removeAllKz;
     }
 
     private void openFragment() {

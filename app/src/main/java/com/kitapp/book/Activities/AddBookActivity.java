@@ -119,6 +119,7 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplication(), SelectCityActivity.class);
+                intent.putExtra("remove", true);
 
                 startActivityForResult(intent, SELECT_CITY_REQUEST_CODE);
             }
@@ -414,6 +415,11 @@ public class AddBookActivity extends AppCompatActivity {
             isValid = false;
             focusView = genreTextView;
             toastMessage = getString(R.string.select_genre);
+        }
+        if (selectedCityId == null) {
+            isValid = false;
+            focusView = cityTextView;
+            toastMessage = getString(R.string.select_city);
         }
 
         if (isValid == false) focusView.requestFocus();

@@ -409,7 +409,6 @@ public class WelcomeActivity extends AppCompatActivity {
         Backendless.UserService.login(phone, password, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser response) {
-                Toast.makeText(getApplicationContext(), "CUR USER LOGGINED", Toast.LENGTH_SHORT).show();
                 //Backendless.UserService.setCurrentUser(response);
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
