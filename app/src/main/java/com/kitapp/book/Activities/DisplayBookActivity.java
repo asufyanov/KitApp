@@ -146,7 +146,7 @@ public class DisplayBookActivity extends AppCompatActivity {
 
                     Intent sendIntent = new Intent("android.intent.action.MAIN");
                     sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
-                    sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(phone) + "@s.whatsapp.net");//phone number without "+" prefix
+                    sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(uriPhone) + "@s.whatsapp.net");//phone number without "+" prefix
 
                     startActivity(sendIntent);
                 } else {

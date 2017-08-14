@@ -204,7 +204,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/button_border"
-                    android:text="@string/save"
+                    android:text="@string/add"
                     android:theme="@style/MyButton" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

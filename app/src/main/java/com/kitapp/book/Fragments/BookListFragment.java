@@ -24,6 +24,7 @@ import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
+import com.google.gson.Gson;
 import com.kitapp.book.Activities.AddBookActivity;
 import com.kitapp.book.Activities.SelectCityActivity;
 import com.kitapp.book.Adapters.RecyclerBookAdapter;
@@ -36,6 +37,8 @@ import com.pixplicity.easyprefs.library.Prefs;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -267,6 +270,20 @@ public class BookListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SELECT_CITY_REQUEST_CODE && resultCode == RESULT_OK){
+            if (data!=null){
+                City city = new Gson().fromJson(data.getExtras().getString("city"), City.class);
+
+                setSearchCity (city);
+
+            }
+
+        }
+    }
+
     public void onRefresh() {
 
 
@@ -296,6 +313,7 @@ public class BookListFragment extends Fragment {
     }
 
     public void deleteBook(final Book book, final int adapterPosition) {
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Удалить?");
@@ -337,6 +355,39 @@ public class BookListFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // negative button logic
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        // display dialog
+        dialog.show();
+    }
+
+    public void editBook(final Book book, final int adapterPosition) {
+        String bookAsString = new Gson().toJson(books.get(adapterPosition));
+        Intent intent = new Intent(getActivity(), AddBookActivity.class);
+
+        intent.putExtra("book", bookAsString);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        getActivity().startActivity(intent);
+
+    }
+
+    public void moreBtnClicked(final Book book, final int adapterPosition) {
+        final String[] catNamesArray = {getString(R.string.edit_book), getString(R.string.delete_book)};
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(getString(R.string.select_action))
+                .setItems(catNamesArray, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0){
+                            editBook(book, adapterPosition);
+                        }else if (which == 1){
+                            deleteBook(book, adapterPosition);
+                        }
                     }
                 });
 

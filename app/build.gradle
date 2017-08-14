@@ -5,9 +5,9 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.kitapp.book"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 22
-        versionCode 6
+        versionCode 10
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

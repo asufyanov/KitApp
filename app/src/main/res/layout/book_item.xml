@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,20 +23,21 @@
 
     <ImageButton
 
-        android:id="@+id/deleteBtn"
+        android:id="@+id/moreBtn"
         android:layout_width="35dp"
-
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
         android:background="@null"
-        android:padding="4dp"
 
-        android:scaleType="centerInside"
 
-        android:src="@mipmap/ic_remove"
-        android:visibility="visible" />
+        android:cropToPadding="false"
+        android:paddingBottom="4dp"
+        android:paddingLeft="4dp"
+        android:scaleType="fitXY"
+        android:visibility="visible"
+        app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
 
     <TextView
@@ -101,22 +103,7 @@
 
         android:layout_centerHorizontal="true" />
 
-    <ImageButton
 
-        android:id="@+id/editBtn"
-        android:layout_width="35dp"
-
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/deleteBtn"
-        android:adjustViewBounds="true"
-        android:background="@null"
-        android:clickable="true"
-
-        android:elevation="24dp"
-        android:padding="5dp"
-        android:scaleType="centerInside"
-        android:src="@mipmap/ic_edit_pencil" />
 
 
 </RelativeLayout>

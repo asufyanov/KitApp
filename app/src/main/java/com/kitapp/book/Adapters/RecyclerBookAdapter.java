@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.bumptech.glide.Glide;
@@ -134,15 +133,12 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     .crossFade()
                     .into(vh.imageView);
             if (books.get(position).getOwner()==null){
-                vh.deleteBtn.setVisibility(View.GONE);
-                vh.editBtn.setVisibility(View.GONE);
+                vh.moreBtn.setVisibility(View.GONE);
             }
             else if (!Backendless.UserService.CurrentUser().getObjectId().equals(books.get(position).getOwner().getObjectId())) {
-                vh.deleteBtn.setVisibility(View.GONE);
-                vh.editBtn.setVisibility(View.GONE);
+                vh.moreBtn.setVisibility(View.GONE);
             } else {
-                vh.deleteBtn.setVisibility(View.VISIBLE);
-                vh.editBtn.setVisibility(View.VISIBLE);
+                vh.moreBtn.setVisibility(View.VISIBLE);
 
             }
 
@@ -170,8 +166,7 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView bookAuthorTextView;
         TextView bookPriceTextView;
         TextView cityTextView;
-        ImageButton deleteBtn;
-        ImageButton editBtn;
+        ImageButton moreBtn;
 
 
 
@@ -184,31 +179,21 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             bookPriceTextView = (TextView) v.findViewById(R.id.bookPriceId);
             cityTextView = (TextView) v.findViewById(R.id.cityTextView);
             imageView = (ImageView) v.findViewById(R.id.imageView);
-            deleteBtn = (ImageButton) v.findViewById(R.id.deleteBtn);
-            editBtn = (ImageButton) v.findViewById(R.id.editBtn);
+            moreBtn = (ImageButton) v.findViewById(R.id.moreBtn);
 
 
             itemView.setOnClickListener(this);
-            editBtn.setOnClickListener(this);
-            deleteBtn.setOnClickListener(this);
+            moreBtn.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             Log.d("Aziz", "VIEW CLICKED = "+v.getId());
-            if (v.getId() == deleteBtn.getId()){
-
-                ((BookListFragment)parentFragment).deleteBook(books.get(getAdapterPosition()), getAdapterPosition());
+            if (v.getId() == moreBtn.getId()){
 
 
-            } else if (v.getId() == editBtn.getId()){
-                String bookAsString = new Gson().toJson(books.get(getAdapterPosition()));
-                Intent intent = new Intent(parentContext, AddBookActivity.class);
+                ((BookListFragment)parentFragment).moreBtnClicked(books.get(getAdapterPosition()), getAdapterPosition());
 
-                intent.putExtra("book", bookAsString);
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                parentContext.startActivity(intent);
 
             } else  {
                 Book book = books.get(getAdapterPosition());

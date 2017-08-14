@@ -91,8 +91,7 @@ public class AddBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_book);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getString(R.string.all_books));
-        if (editedBook != null) toolbar.setTitle(getString(R.string.edit));
+        toolbar.setTitle(getString(R.string.add_book));
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -515,6 +514,8 @@ public class AddBookActivity extends AppCompatActivity {
             bookAsString = getIntent().getExtras().getString("book");
 
         if (bookAsString != null) {
+            toolbar.setTitle(getString(R.string.edit_book));
+
             editedBook = new Gson().fromJson(bookAsString, Book.class);
             authorEditText.setText(editedBook.getAuthor());
             priceEditText.setText(editedBook.getPrice() + "");

@@ -76,16 +76,20 @@ public class WelcomeActivity extends AppCompatActivity {
 
         final DataQueryBuilder queryBuilder = DataQueryBuilder.create();
         queryBuilder.setPageSize(70);
+        queryBuilder.setSortBy("title ASC");
+
 
 
         Backendless.Data.of(Genre.class).find(queryBuilder, new AsyncCallback<List<Genre>>() {
             @Override
             public void handleResponse(List<Genre> genres) {
 
-                queryBuilder.setSortBy("created ASC");
+                DataQueryBuilder queryBuilder2 = DataQueryBuilder.create();
+                queryBuilder2.setSortBy("created ASC");
+                queryBuilder2.setPageSize(70);
 
 
-                Backendless.Data.of(City.class).find(queryBuilder, new AsyncCallback<List<City>>() {
+                Backendless.Data.of(City.class).find(queryBuilder2, new AsyncCallback<List<City>>() {
                     @Override
                     public void handleResponse(List<City> response) {
                         checkAuthorization();

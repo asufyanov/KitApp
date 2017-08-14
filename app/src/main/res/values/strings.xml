@@ -12,7 +12,8 @@
     <!--    ADD BOOK    !-->
     <string name="add_book">Добавить книгу</string>
     <string name="save">Сохранить</string>
-    <string name="edit">Изменить</string>
+    <string name="edit_book">Изменить Книгу</string>
+    <string name="add">Добавить</string>
     <string name="select_picture">Выберите изображение</string>
     <string name="select_genre">Выберите Жанр ></string>
     <string name="select_city">Выберите Город ></string>
@@ -20,7 +21,7 @@
     <string name="enter_author">Введите автора</string>
     <string name="enter_price">Введите цену книги</string>
     <string name="enter_description">Введите описание</string>
-    <string name="book_created_success">Книга успешна создана</string>
+    <string name="book_created_success">Книга успешна добавлена</string>
     <string name="book_created_fail">Не удалось сохранить книгу</string>
     <string name="press_to_edit">Нажмите, чтобы изменить картинку</string>
     <string name="OK">OK</string>
@@ -69,5 +70,9 @@
 
     <!--    CITY ACTIVITY   !-->
     <string name="wholeKazakhstan">Весь Казахстан</string>
+
+    <!--    MORE DIALOG     !-->
+    <string name="delete_book">Удалить Книгу</string>
+    <string name="select_action">Выберите действие</string>
 
 </resources>

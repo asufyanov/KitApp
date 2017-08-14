@@ -124,26 +124,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId()==R.id.filterMenuItem){
             //Intent intent = new Intent(this, )
-            Intent intent = new Intent(getApplication(), SelectCityActivity.class);
+            Intent intent = new Intent(this, SelectCityActivity.class);
 
-            startActivityForResult(intent, SELECT_CITY_REQUEST_CODE);
+            blf.startActivityForResult(intent, SELECT_CITY_REQUEST_CODE);
         }
         return super.onOptionsItemSelected(item);
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == SELECT_CITY_REQUEST_CODE && resultCode == RESULT_OK){
-            if (data!=null){
-                City city = new Gson().fromJson(data.getExtras().getString("city"), City.class);
-
-                blf.setSearchCity (city);
-
-            }
-
-        }
-    }
 }
