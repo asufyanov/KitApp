@@ -26,6 +26,7 @@ import com.backendless.exceptions.BackendlessFault;
 import com.backendless.persistence.DataQueryBuilder;
 import com.google.gson.Gson;
 import com.kitapp.book.Activities.AddBookActivity;
+import com.kitapp.book.Activities.MainActivity;
 import com.kitapp.book.Activities.SelectCityActivity;
 import com.kitapp.book.Adapters.RecyclerBookAdapter;
 import com.kitapp.book.Models.Book;
@@ -51,6 +52,7 @@ public class BookListFragment extends Fragment {
     public Genre searchGenre = null;
     public BackendlessUser searchOwner = null;
     public City searchCity = null;
+
     RecyclerView recyclerView;
     RecyclerBookAdapter adapter;
     SwipeRefreshLayout swipeContainer;
@@ -68,6 +70,11 @@ public class BookListFragment extends Fragment {
 
     public BookListFragment() {
         // Required empty public constructor
+
+        if (getActivity() instanceof MainActivity) {
+            MainActivity activity = new MainActivity();
+            activity = (MainActivity) getActivity();
+        }
     }
 
 

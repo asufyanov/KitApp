@@ -53,17 +53,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         setReferences();
 
-        Backendless.Messaging.registerDevice("896051692086", "default", new AsyncCallback<Void>() {
-            @Override
-            public void handleResponse(Void response) {
-
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-
-            }
-        });
 
         if (MyDataHolder.getInstance().genreTitles == null && MyDataHolder.getInstance().cities == null ) loadGenres();
         else checkAuthorization();
@@ -108,6 +97,8 @@ public class WelcomeActivity extends AppCompatActivity {
                             recreate();
                         }
 
+                        Log.d("debug", "City fail " + s);
+
                         showProgress(false);
                         registerBtn.setVisibility(View.GONE);
                         recreateBtn.setVisibility(View.VISIBLE);
@@ -131,6 +122,8 @@ public class WelcomeActivity extends AppCompatActivity {
                     UserTokenStorageFactory.instance().getStorage().set(null);
                     recreate();
                 }
+
+                Log.d("debug", "Genre fail " + s + backendlessFault.toString());
 
                 showProgress(false);
                 registerBtn.setVisibility(View.GONE);

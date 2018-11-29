@@ -3,7 +3,6 @@ package com.kitapp.book.Activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -15,11 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.backendless.BackendlessUser;
-import com.google.gson.Gson;
 import com.kitapp.book.Adapters.MyNavigationDrawer;
 import com.kitapp.book.Adapters.MySearchView;
 import com.kitapp.book.Fragments.BookListFragment;
-import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 import com.kitapp.book.R;
 
@@ -29,12 +26,8 @@ public class BookListActivity extends AppCompatActivity {
     Toolbar toolbar;
     FloatingActionButton fab;
     SearchView searchView;
-    String searchString = "";
 
 
-    long lastSearchTime;
-    CountDownTimer timer;
-    String prevSearch = null;
 
     BookListFragment blf = new BookListFragment();
 

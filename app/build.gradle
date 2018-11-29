@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.kitapp.book"
         minSdkVersion 19
@@ -61,4 +61,5 @@ dependencies {
     compile 'com.backendless:backendless:4.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:support-vector-drawable:25.3.1'
 }

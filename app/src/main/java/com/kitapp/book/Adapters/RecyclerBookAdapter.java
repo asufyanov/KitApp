@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.backendless.Backendless;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
-import com.kitapp.book.Activities.AddBookActivity;
 import com.kitapp.book.Activities.DisplayBookActivity;
 import com.kitapp.book.Fragments.BookListFragment;
 import com.kitapp.book.Models.Book;
@@ -32,16 +31,14 @@ import java.util.List;
 
 public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    OnLoadMoreListener onLoadMoreListener;
-    private int visibleThreshold = 2;
-    private int lastVisibleItem, totalItemCount;
-    boolean loading=false;
-
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
+    OnLoadMoreListener onLoadMoreListener;
+    boolean loading = false;
     Context parentContext;
     Fragment parentFragment;
-
+    private int visibleThreshold = 2;
+    private int lastVisibleItem, totalItemCount;
     private List<Book> books;
 
     // Конструктор
@@ -50,7 +47,8 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         parentContext = fragment.getActivity();
         this.books = books;
 
-            if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
+
+        if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
 
                 final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -160,6 +158,14 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         loading = !a;
     }
 
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
     public class BookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // наш пункт состоит только из одного TextView
         TextView bookTitleTextView;
@@ -220,13 +226,5 @@ public class RecyclerBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(v);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBar);
         }
-    }
-
-    public interface OnLoadMoreListener {
-        void onLoadMore();
-    }
-
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
     }
 }

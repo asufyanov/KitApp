@@ -9,6 +9,7 @@ import com.pixplicity.easyprefs.library.Prefs;
  * Created by Admin on 06.08.2017.
  */
 
+
 public class KitappApplication extends Application {
 
     @Override
