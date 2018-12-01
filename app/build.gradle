@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "26.0.2"
+    compileSdkVersion 26
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "com.kitapp.book"
         minSdkVersion 19
         targetSdkVersion 22
         versionCode 10
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -36,30 +37,31 @@ repositories {
     }
 
 }
-
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile('com.mikepenz:materialdrawer:5.8.0@aar') {
+    implementation('com.mikepenz:materialdrawer:5.8.0@aar') {
         transitive = true
     }
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.pixplicity.easyprefs:library:1.9.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.pixplicity.easyprefs:library:1.9.0'
 
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'me.villani.lorenzo.android:android-cropimage:1.1.+'
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    compile 'com.facebook.android:account-kit-sdk:4.+'
-    compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.afollestad.material-dialogs:core:0.9.1.0'
-    compile 'com.backendless:backendless:4.0.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:support-vector-drawable:25.3.1'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'me.villani.lorenzo.android:android-cropimage:1.1.+'
+    implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    implementation 'com.facebook.android:account-kit-sdk:4.+'
+    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.afollestad.material-dialogs:core:0.9.1.0'
+    implementation 'com.backendless:backendless:4.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    compile 'com.theartofdev.edmodo:android-image-cropper:2.5.+'
+
+
 }

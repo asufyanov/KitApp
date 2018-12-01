@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.camera.CropImageIntentBuilder;
 import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
@@ -34,10 +34,13 @@ import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 import com.kitapp.book.MyDataHolder;
 import com.kitapp.book.R;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -47,7 +50,6 @@ public class AddBookActivity extends AppCompatActivity {
     private static final int SELECT_CITY_REQUEST_CODE = 4;
     protected View view;
     protected ImageView imgViewCamera;
-    protected int LOAD_IMAGE_CAMERA = 0, REQUEST_CROP_PICTURE = 1, LOAD_IMAGE_GALLARY = 2;
     File sendFile = null;
     EditText titleEditText;
     EditText authorEditText;
@@ -66,10 +68,8 @@ public class AddBookActivity extends AppCompatActivity {
     ArrayList<Genre> genreList;
     String selectedGenreId = null;
     String selectedCityId = null;
-    boolean isActivityJustStarted = true;
-    private Uri picUri;
+    Uri uri = null;
     private Button btn;
-    private File pic;
     private BackendlessUser curUser;
 
     @Override
@@ -129,55 +129,18 @@ public class AddBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), LOAD_IMAGE_GALLARY);
-
-
-                /*
-                final CharSequence[] options = {"Take Photo", "Choose from Gallery"};
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddBookActivity.this);
-                builder.setTitle("Select Pic Using...");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (options[item].equals("Take Photo")) {
-
-                            try {
-                                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-                                pic = new File(Environment.getExternalStorageDirectory(),
-                                        "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
-
-                                picUri = Uri.fromFile(pic);
-
-                                cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, picUri);
-
-                                cameraIntent.putExtra("return-data", true);
-                                startActivityForResult(cameraIntent, LOAD_IMAGE_CAMERA);
-                            } catch (ActivityNotFoundException e) {
-                                e.printStackTrace();
-                            }
-
-                        } else if (options[item].equals("Choose from Gallery")) {
-                            Intent intent = new Intent(Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture)), LOAD_IMAGE_GALLARY);
-
-                        }
-                    }
-                });
-
-                builder.show();*/
-
+                imageSelector();
+                
             }
         });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadBook(sendFile);
+                try {
+                    uploadBook(sendFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -191,62 +154,31 @@ public class AddBookActivity extends AppCompatActivity {
                 .into(imgViewCamera);
     }
 
+    private void imageSelector() {
+
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(3, 4)
+
+                .start(this);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        File croppedImageFile = new File(getFilesDir(), "test.jpg");
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == LOAD_IMAGE_CAMERA && resultCode == RESULT_OK) {
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                uri = result.getUri();
+                sendFile = new File(uri.getPath());
+                imgViewCamera.setImageBitmap(BitmapFactory.decodeFile(sendFile.getAbsolutePath()));
+                sendFile = saveBitmapToFile(sendFile);
+                //imgViewCamera.setImageURI(uri);
+                imgViewCamera.setImageBitmap(BitmapFactory.decodeFile(sendFile.getAbsolutePath()));
 
 
-            Uri croppedImage = Uri.fromFile(croppedImageFile);
-            CropImageIntentBuilder cropImage = new CropImageIntentBuilder(3, 4, 600, 800, croppedImage);
-            cropImage.setOutlineColor(0xFF03A9F4);
-
-            cropImage.setSourceImage(picUri);
-
-            startActivityForResult(cropImage.getIntent(this), REQUEST_CROP_PICTURE);
-            //CropImage();
-
-        } else if (requestCode == LOAD_IMAGE_GALLARY) {
-            if (data != null) {
-
-                //Uri croppedImage = data.getData();
-                Uri croppedImage = Uri.fromFile(croppedImageFile);
-                CropImageIntentBuilder cropImage = new CropImageIntentBuilder(3, 4, 600, 800, croppedImage);
-                cropImage.setOutlineColor(0xFF03A9F4);
-                cropImage.setSourceImage(data.getData());
-
-
-                startActivityForResult(cropImage.getIntent(this), REQUEST_CROP_PICTURE);
-
-                // picUri = data.getData();
-
-//
-                // CropImage();
-            }
-        } else if (requestCode == REQUEST_CROP_PICTURE) {
-            Log.d("CROP AFTER", "I AM HERE1");
-            if (data != null) {
-                Log.d("CROP AFTER", "I AM HERE2");
-                croppedImageFile = saveBitmapToFile(croppedImageFile);
-                imgViewCamera.setImageBitmap(BitmapFactory.decodeFile(croppedImageFile.getAbsolutePath()));
-                sendFile = croppedImageFile;
-                //uploadBook(croppedImageFile);
-                // get the returned data
-                //Bundle extras = data.getExtras();
-
-                // get the cropped bitmap
-                //Bitmap photo = extras.getParcelable("data");
-
-                //imgViewCamera.setImageBitmap(photo);
-
-                if (pic != null) {
-                    // To delete original image taken by camera
-                    if (pic.delete()) {
-                        //Common.showToast(AddBookActivity.this,"original image deleted...");
-                    }
-                }
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
         } else if (requestCode == SELECT_GENRE_REQUEST_CODE) {
             if (data != null) {
@@ -259,11 +191,13 @@ public class AddBookActivity extends AppCompatActivity {
             if (data != null) {
                 String cityAsString = data.getExtras().getString("city");
                 City city = new Gson().fromJson(cityAsString, City.class);
-                cityTextView.setText(city.getTitle()+ " >");
+                cityTextView.setText(city.getTitle() + " >");
                 selectedCityId = city.getObjectId();
             }
         }
+
     }
+
 
     public boolean onCreateOptionsMenu(final Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -274,7 +208,11 @@ public class AddBookActivity extends AppCompatActivity {
         saveMenuBtn.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                uploadBook(sendFile);
+                try {
+                    uploadBook(sendFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 return false;
             }
@@ -300,7 +238,7 @@ public class AddBookActivity extends AppCompatActivity {
     }
 
 
-    public void uploadBook(File file) {
+    public void uploadBook(File file) throws IOException {
 
         if (isFormValid() != true) return;
 
@@ -333,7 +271,8 @@ public class AddBookActivity extends AppCompatActivity {
 
         if (sendFile != null) { //LOAD FROM NEW PHOTO
 
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
             Backendless.Files.Android.upload(bitmap, Bitmap.CompressFormat.PNG, 100, filename, "bookImage",
                     new AsyncCallback<BackendlessFile>() {
                         @Override
@@ -469,8 +408,34 @@ public class AddBookActivity extends AppCompatActivity {
 
             return file;
         } catch (Exception e) {
+
             return null;
         }
+    }
+
+    public void saveBook(Book bookToSave) {
+
+        bookToSave.saveAsync(new AsyncCallback<Book>() {
+            @Override
+            public void handleResponse(Book book) {
+                Log.d(this.getClass().getSimpleName(), "Book SAVED SUCCESS");
+                Toast.makeText(getApplicationContext(), getString(R.string.book_created_success), Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.d(this.getClass().getSimpleName(), "Book FAILED TO SAVE");
+                Log.d(this.getClass().getSimpleName(), "fault = " + fault.toString());
+                Toast.makeText(getApplicationContext(), getString(R.string.book_created_fail), Toast.LENGTH_LONG).show();
+                progressView.setVisibility(View.GONE);
+                loginForm.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     public void loadGenres() {
@@ -484,28 +449,6 @@ public class AddBookActivity extends AppCompatActivity {
 
         genreList = MyDataHolder.getInstance().genreTitles;
 
-/*
-        Backendless.Data.of(Genre.class).find(queryBuilder, new AsyncCallback<List<Genre>>() {
-            @Override
-            public void handleResponse(List<Genre> genreBackendlessCollection) {
-
-                progressView.setVisibility(View.GONE);
-                loginForm.setVisibility(View.VISIBLE);
-
-                Log.d("AddBook", "genre size = " + genreBackendlessCollection.size());
-                genreList = genreBackendlessCollection;
-                spinnerGenreAdapter = new SpinnerGenreAdapter(getApplicationContext(), genreList);
-                spinner.setAdapter(spinnerGenreAdapter);
-            }
-
-            @Override
-            public void handleFault(BackendlessFault backendlessFault) {
-                Log.d("AddBook", backendlessFault.getMessage());
-                progressView.setVisibility(View.GONE);
-                Toast.makeText(getApplication(), "Не удалось запустить задачу, попробуйте позже", Toast.LENGTH_LONG);
-            }
-        });
-*/
     }
 
     public void fillEditedBook() {
@@ -547,31 +490,6 @@ public class AddBookActivity extends AppCompatActivity {
                     .into(imgViewCamera);
 
         }
-    }
-
-    public void saveBook(Book bookToSave) {
-
-        bookToSave.saveAsync(new AsyncCallback<Book>() {
-            @Override
-            public void handleResponse(Book book) {
-                Log.d(this.getClass().getSimpleName(), "Book SAVED SUCCESS");
-                Toast.makeText(getApplicationContext(), getString(R.string.book_created_success), Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
-
-            }
-
-            @Override
-            public void handleFault(BackendlessFault fault) {
-                Log.d(this.getClass().getSimpleName(), "Book FAILED TO SAVE");
-                Log.d(this.getClass().getSimpleName(), "fault = " + fault.toString());
-                Toast.makeText(getApplicationContext(), getString(R.string.book_created_fail), Toast.LENGTH_LONG).show();
-                progressView.setVisibility(View.GONE);
-                loginForm.setVisibility(View.VISIBLE);
-            }
-        });
-
     }
 
 }

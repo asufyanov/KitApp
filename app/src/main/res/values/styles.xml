@@ -48,16 +48,4 @@
     </style>
 
 
-    <style name="LoginThemeYellow" parent="Theme.AccountKit">
-        <item name="com_accountkit_primary_color">#BAA08A</item>
-        <item name="com_accountkit_primary_text_color">@android:color/white</item>
-        <item name="com_accountkit_secondary_text_color">#323B46</item>
-        <item name="com_accountkit_status_bar_color">@color/headerAccaountColor</item>
-
-        <item name="com_accountkit_input_accent_color">?attr/com_accountkit_primary_color</item>
-        <item name="com_accountkit_input_border_color">?attr/com_accountkit_primary_color</item>
-    </style>
-
-
-
 </resources>

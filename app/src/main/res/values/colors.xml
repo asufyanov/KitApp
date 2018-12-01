@@ -5,8 +5,6 @@
     <color name="colorPrimaryDark">#b6967b</color>
     <color name="colorAccent">#0038FF</color>
     <color name="bookTitleColor">#000000</color>
-    <color name="headerAccaountColor">#CCB097</color>
-    <color name="grey">#D8D8D8</color>
 
     <!-- OVERWRITE THESE COLORS FOR A LIGHT THEME -->
     <!-- MaterialDrawer DEFAULT colors -->
@@ -22,13 +20,6 @@
     <color name="material_drawer_selected_text">#2196F3</color>
     <color name="material_drawer_header_selection_text">#000000</color>
 
-    <color name="PrimaryColorLight">#e9e1c8</color>
-
-    <color name="textBrownColor">#FF7B4920</color>
-
-    <color name="trans">#00ffffff</color>
-
 
     <color name="pink">#E91E63</color>
-    <color name="indigo">#3F51B5</color>
 </resources>

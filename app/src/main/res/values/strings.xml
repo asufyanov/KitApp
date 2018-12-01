@@ -4,14 +4,10 @@
 
     <string name="FACEBOOK_APP_ID">1818919508383495</string>
     <string name="ak_login_protocol_scheme">akd3d031e023904dade51b2215d020d02d</string>
-    <string name="title_activity_registration">RegistrationActivity</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">d9e578cd05d5d113b597bd7d2e20fb4b</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!--    ADD BOOK    !-->
     <string name="add_book">Добавить книгу</string>
-    <string name="save">Сохранить</string>
     <string name="edit_book">Изменить Книгу</string>
     <string name="add">Добавить</string>
     <string name="select_picture">Выберите изображение</string>
@@ -44,15 +40,12 @@
     <!--    DISCPLAY BOOK   !-->
     <string name="author">Автор</string>
     <string name="genre">Жанр</string>
-    <string name="tenge">Тенге</string>
     <string name="not_entered">Не указан</string>
-    <string name="call">Позвонить</string>
     <string name="city">Город</string>
 
     <string name="owner">Владелец:</string>
     <string name="price">Цена</string>
 
-    <string name="wtsp_is_not_installed">Whatsapp не установлен</string>
     <string name="send_whatsapp">Написать в Whatsapp</string>
 
     <!--    NAV DRAWER BOOK   !-->
