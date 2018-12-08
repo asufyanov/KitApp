@@ -1,44 +1,55 @@
 package com.kitapp.book.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 import com.kitapp.book.R;
+import com.kitapp.book.ServerCalls;
 
 public class NameSurname extends AppCompatActivity {
 
-    EditText name;
-    EditText surname;
+    EditText nameEditText;
+    EditText surnameEditText;
     Button btn;
+    Boolean isForResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name_surname);
 
+
+        if (getCallingActivity() == null) isForResult = false;
+        else isForResult = true;
+
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        name = (EditText) findViewById(R.id.nameEditTextId);
-        surname = (EditText) findViewById(R.id.surnameEditText);
+        nameEditText = (EditText) findViewById(R.id.nameEditTextId);
+        surnameEditText = (EditText) findViewById(R.id.surnameEditText);
         btn = (Button) findViewById(R.id.saveBtn);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isFormValid()) {
-                    Intent intent = new Intent();
-                    intent.putExtra("name", name.getText().toString().trim());
-                    intent.putExtra("surname", surname.getText().toString().trim());
 
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    if (isForResult == true) returnResult();
+                    else updateUserInfo();
+
 
                 }
             }
@@ -47,22 +58,59 @@ public class NameSurname extends AppCompatActivity {
 
     }
 
+    private void updateUserInfo() {
+        String name = nameEditText.getText().toString().trim();
+        String surname = surnameEditText.getText().toString().trim();
+
+        ServerCalls.updateNameSurname(name, surname, new AsyncCallback<BackendlessUser>() {
+            @Override
+            public void handleResponse(BackendlessUser response) {
+                Toast.makeText(getApplicationContext(), "Сохранено", Toast.LENGTH_LONG).show();
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+                Activity act = getParent();
+                if (act != null) getParent().recreate();
+
+                finish();
+
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Toast.makeText(getApplicationContext(), "Не удалось сохранить", Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    private void returnResult() {
+        Intent intent = new Intent();
+        intent.putExtra("name", nameEditText.getText().toString().trim());
+        intent.putExtra("surname", surnameEditText.getText().toString().trim());
+
+
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     private boolean isFormValid() {
-        name.setError(null);
-        surname.setError(null);
+        nameEditText.setError(null);
+        surnameEditText.setError(null);
 
         View focusView = null;
 
         boolean cancel = true;
-        if (TextUtils.isEmpty(name.getText())) {
-            name.setError("Введите ИМЯ");
-            focusView = name;
+        if (TextUtils.isEmpty(nameEditText.getText())) {
+            nameEditText.setError("Введите ИМЯ");
+            focusView = nameEditText;
             cancel = false;
         }
-        if (TextUtils.isEmpty(surname.getText())) {
-            surname.setError("Введите фамилию");
+        if (TextUtils.isEmpty(surnameEditText.getText())) {
+            surnameEditText.setError("Введите фамилию");
             cancel = false;
-            focusView = surname;
+            focusView = surnameEditText;
         }
 
 

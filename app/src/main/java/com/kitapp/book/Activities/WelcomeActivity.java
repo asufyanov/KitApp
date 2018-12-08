@@ -350,6 +350,7 @@ public class WelcomeActivity extends AppCompatActivity {
         user.setProperty("name", name);
         user.setProperty("surname", surname);
 
+
         Backendless.UserService.register(user, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser response) {

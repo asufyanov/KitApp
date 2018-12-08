@@ -21,6 +21,7 @@ import com.kitapp.book.Adapters.ViewPagerAdapter;
 import com.kitapp.book.Fragments.BookListFragment;
 import com.kitapp.book.Fragments.GenreListFragment;
 import com.kitapp.book.R;
+import com.mikepenz.materialdrawer.Drawer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     SearchView searchView;
     CountDownTimer timer;
     String prevSearch = null;
+    Drawer drawer;
     private TabLayout tabLayout;
     private ViewPager viewPager;
 
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        MyNavigationDrawer.createDrawer(this, toolbar);
+        drawer = MyNavigationDrawer.createDrawer(this, toolbar);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -127,5 +129,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (drawer != null) MyNavigationDrawer.updateNameSurname(drawer);
 
+    }
 }
