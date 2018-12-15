@@ -53,15 +53,14 @@ dependencies {
     implementation 'com.pixplicity.easyprefs:library:1.9.0'
 
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'me.villani.lorenzo.android:android-cropimage:1.1.+'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    implementation 'com.facebook.android:account-kit-sdk:4.+'
-    implementation 'com.google.code.gson:gson:2.8.0'
+    implementation 'com.facebook.android:account-kit-sdk:4.39.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.afollestad.material-dialogs:core:0.9.1.0'
-    implementation 'com.backendless:backendless:4.0.1'
+    implementation 'com.backendless:backendless:4.0.2'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.5.+'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.5.1'
 
 
 }

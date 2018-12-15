@@ -34,6 +34,7 @@ import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
 import com.kitapp.book.MyDataHolder;
 import com.kitapp.book.R;
+import com.kitapp.book.ServerCalls;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -409,13 +410,14 @@ public class AddBookActivity extends AppCompatActivity {
             return file;
         } catch (Exception e) {
 
+            Toast.makeText(this, "Не удалось сжать фото", Toast.LENGTH_LONG);
             return null;
         }
     }
 
     public void saveBook(Book bookToSave) {
 
-        bookToSave.saveAsync(new AsyncCallback<Book>() {
+        ServerCalls.saveBookAsync(bookToSave, new AsyncCallback<Book>() {
             @Override
             public void handleResponse(Book book) {
                 Log.d(this.getClass().getSimpleName(), "Book SAVED SUCCESS");

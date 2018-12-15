@@ -6,12 +6,14 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.backendless.Backendless;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
@@ -25,22 +27,28 @@ public class NameSurname extends AppCompatActivity {
     Button btn;
     Boolean isForResult;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name_surname);
+
+        nameEditText = (EditText) findViewById(R.id.nameEditTextId);
+        surnameEditText = (EditText) findViewById(R.id.surnameEditText);
+        btn = (Button) findViewById(R.id.saveBtn);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+
+        fillCurData();
 
 
         if (getCallingActivity() == null) isForResult = false;
         else isForResult = true;
 
 
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 
-        nameEditText = (EditText) findViewById(R.id.nameEditTextId);
-        surnameEditText = (EditText) findViewById(R.id.surnameEditText);
-        btn = (Button) findViewById(R.id.saveBtn);
+
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,6 +64,20 @@ public class NameSurname extends AppCompatActivity {
         });
 
 
+    }
+
+    private void fillCurData() {
+        try {
+            BackendlessUser curUser = Backendless.UserService.CurrentUser();
+            String oldName = (String) curUser.getProperty("name");
+            String oldSurname = (String) curUser.getProperty("surname");
+            nameEditText.setText(oldName);
+            surnameEditText.setText(oldSurname);
+
+
+        } catch (Exception e) {
+            Log.d("NameSurname", e.getMessage());
+        }
     }
 
     private void updateUserInfo() {

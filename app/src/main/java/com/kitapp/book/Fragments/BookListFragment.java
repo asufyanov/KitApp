@@ -32,6 +32,7 @@ import com.kitapp.book.Adapters.RecyclerBookAdapter;
 import com.kitapp.book.Models.Book;
 import com.kitapp.book.Models.City;
 import com.kitapp.book.Models.Genre;
+import com.kitapp.book.MyDataHolder;
 import com.kitapp.book.R;
 import com.pixplicity.easyprefs.library.Prefs;
 
@@ -229,7 +230,7 @@ public class BookListFragment extends Fragment {
         Log.d("addBooksToRes", "offsetAfter=" + i);
         Log.d("addBooksToRes", "whereClause=" + whereClause);
 
-        queryBuilder.setPageSize(10);
+        queryBuilder.setPageSize(MyDataHolder.MAX_PAGE_LOAD);
         queryBuilder.setOffset(i);
 
 
@@ -249,6 +250,8 @@ public class BookListFragment extends Fragment {
                     emptyState.setVisibility(View.VISIBLE);
 
                     //Toast.makeText(getActivity(), getString(R.string.no_books), Toast.LENGTH_SHORT).show();
+                } else if (bookBackendlessCollection.size() < MyDataHolder.MAX_PAGE_LOAD) {
+                    adapter.setLoaded(false);
                 } else if (bookBackendlessCollection.size() == 0 && books.size() != 0) {
                     if (getActivity() != null)
                         Toast.makeText(getActivity(), getString(R.string.no_books_left_else), Toast.LENGTH_SHORT).show();
@@ -305,13 +308,13 @@ public class BookListFragment extends Fragment {
         int bookSize = books.size();
         books.clear();
         adapter.notifyItemRangeRemoved(0, bookSize);
-        Log.d("AzizOnRefresh", "searchString = " + searchView.getQuery().toString());
 
         //swipeToLoadLayout.setRefreshing(false);
 
         addBooksToRecycleView(0, searchView.getQuery().toString(), 1, "onRefresh");
 
     }
+
 
     //@Override
     public void onLoadMore() {
